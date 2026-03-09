@@ -1,0 +1,774 @@
+<!-- ========== TOP UTILITY BAR ========== -->
+<div class="bg-[#262626] text-white py-2 text-xs hidden md:block">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end gap-6 uppercase font-bold tracking-wider">
+    <a href="#" class="hover:text-custom-yellow transition-colors">Become a partner</a>
+    <a href="#" class="hover:text-custom-yellow transition-colors">pandago for business</a>
+  </div>
+</div>
+
+<!-- ========== FIXED HEADER ========== -->
+<div class="fixed top-0 left-0 w-full bg-white shadow-md z-50 md:mt-0"
+  [style.top]="isScrolled() ? '0' : (isDesktop() ? '32px' : '0')">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+    <!-- Header top row -->
+    <header class="flex flex-wrap items-center justify-between gap-3 pb-1" style="transform-style: preserve-3d;">
+      <div class="flex items-center flex-wrap gap-3 sm:gap-6" style="transform-style: preserve-3d;">
+        <span class="text-3xl font-bold text-custom-yellow-dark tracking-tight"
+          style="text-shadow: 0 4px 8px rgba(251,206,7,0.25);">Noshahi panda</span>
+        <div class="relative inline-block" style="transform-style: preserve-3d; z-index: 100;">
+          <div id="locationPill" (click)="toggleCityDropdown($event)"
+            class="flex items-center text-gray-700 text-sm sm:text-base bg-gray-100 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-all cursor-default">
+            <i class="fas fa-map-pin text-custom-yellow mr-2"></i>
+            <span id="locationText" class="font-medium">{{ currentAddress() }}</span>
+            <i class="fas fa-chevron-down ml-2 text-gray-500 text-xs"></i>
+          </div>
+          <!-- dropdown – completely solid white -->
+          <div id="citySearchDropdown" [class.show]="showCityDropdown()"
+            class="border border-gray-200 rounded-xl shadow-xl">
+            <div class="p-3">
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" id="citySearchInput" placeholder="Search Pakistani city..."
+                  (input)="filterCities($event)" (keydown.enter)="selectFirstCity($event)"
+                  (keydown.escape)="showCityDropdown.set(false)"
+                  class="w-full border border-gray-200 rounded-full py-2.5 pl-9 pr-4 text-sm bg-gray-50 focus:ring-2 focus:ring-custom-yellow focus:border-transparent">
+              </div>
+              <div id="suggestionList" class="mt-2 max-h-48 overflow-y-auto divide-y divide-gray-100">
+                @for (city of filteredCities(); track city) {
+                <div
+                  class="suggestion-item px-3 py-2 text-sm text-gray-700 hover:bg-yellow-50 transition cursor-default"
+                  (click)="updateLocation(city)">
+                  {{ city }}
+                </div>
+                } @empty {
+                <div class="px-3 py-2 text-sm text-gray-500">No matching cities</div>
+                }
+              </div>
+              <div class="text-xs text-gray-500 mt-2 px-2">Click on a city to select</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
+        <a href="#" (click)="openSignupModal($event)"
+          class="trigger-signup-modal text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer">Log
+          in</a>
+        <a href="#" (click)="openSignupModal($event)"
+          class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center gap-1"
+          style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
+          <i class="fas fa-gift"></i> <span class="hidden sm:inline">Sign up for free delivery</span><span
+            class="sm:hidden">Sign up</span>
+        </a>
+        <button class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-colors relative">
+          <i class="fas fa-shopping-bag text-xl"></i>
+          <span
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+        <div class="flex items-center text-gray-700 border-l pl-3 border-gray-300">
+          <i class="fas fa-globe text-gray-500 mr-1"></i>
+          <span class="font-medium">EN</span>
+          <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- TABS – no bottom border line -->
+    <div class="flex flex-wrap mt-1 gap-1" id="tabContainer">
+      @for (tab of tabs; track tab.id) {
+      <button class="tab-btn py-2 px-4 font-semibold border-b-2" [class.active-tab]="activeTab() === tab.id"
+        [class.text-custom-yellow-dark]="activeTab() === tab.id" [class.border-custom-yellow]="activeTab() === tab.id"
+        [class.text-gray-500]="activeTab() !== tab.id" [class.border-transparent]="activeTab() !== tab.id"
+        (click)="activeTab.set(tab.id)">
+        <i [class]="tab.icon + ' mr-2'"></i>{{ tab.label }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 main-3d"
+  style="transform-style: preserve-3d; padding-top: 140px;">
+  <!-- TWO COLUMN LAYOUT -->
+  <div class="flex flex-col lg:flex-row gap-8 mt-2">
+    <!-- LEFT COLUMN (filters, offers, cuisines) -->
+    <aside class="lg:w-1/5 w-full space-y-4">
+      <div class="text-lg font-semibold text-gray-800">Filters</div>
+      <div>
+        <div class="text-sm font-medium text-gray-600 mb-2">Sort by</div>
+        <ul class="space-y-1" id="sortOptionsList">
+          @for (option of sortOptions; track option) {
+          <li
+            class="filter-option px-2 py-1.5 rounded-md cursor-pointer hover:bg-yellow-50 text-gray-700 flex items-center justify-between"
+            [class.active]="activeSort() === option" (click)="activeSort.set(option)">
+            <span>{{ option }}</span>
+            <i class="fas fa-check text-custom-yellow-dark active-icon"></i>
+          </li>
+          }
+        </ul>
+      </div>
+      <div>
+        <div class="text-sm font-medium text-gray-600 mb-2">Quick filters</div>
+        <div class="flex flex-wrap gap-2">
+          <button
+            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm flex items-center"
+            [class.bg-yellow-100]="quickFilters().get('ratings')"
+            [class.border-custom-yellow]="quickFilters().get('ratings')"
+            [class.text-custom-yellow-dark]="quickFilters().get('ratings')" (click)="toggleQuickFilter('ratings')">
+            <i class="fas fa-star text-custom-yellow mr-1.5"></i> Ratings 4+</button>
+          <button
+            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm flex items-center"
+            [class.bg-yellow-100]="quickFilters().get('super')"
+            [class.border-custom-yellow]="quickFilters().get('super')"
+            [class.text-custom-yellow-dark]="quickFilters().get('super')" (click)="toggleQuickFilter('super')">
+            <i class="fas fa-crown text-custom-yellow mr-1.5"></i> Super restaurant</button>
+        </div>
+      </div>
+
+
+      <!-- OFFERS -->
+      <div class="mt-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i
+            class="fas fa-tag text-custom-yellow mr-2"></i> Offers</h2>
+        <div class="flex flex-wrap gap-2">
+          @for (offer of offers; track offer) {
+          <span
+            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm"
+            [class.bg-yellow-100]="quickFilters().get(offer)" [class.border-custom-yellow]="quickFilters().get(offer)"
+            [class.text-custom-yellow-dark]="quickFilters().get(offer)" (click)="toggleQuickFilter(offer)">
+            {{ offer }}
+          </span>
+          }
+        </div>
+      </div>
+
+      <!-- DETAILED CUISINES -->
+      <div class="mt-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i
+            class="fas fa-utensils text-custom-yellow mr-2"></i> Cuisines</h2>
+        <div class="relative mb-4">
+          <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" placeholder="Search for cuisine"
+            class="w-full border border-gray-200 rounded-full py-2 pl-8 pr-4 text-sm bg-white shadow-sm focus:ring-2 focus:ring-custom-yellow">
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          @for (cuisine of sideCuisines; track cuisine) {
+          <span
+            class="chip border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm">
+            {{ cuisine }}
+          </span>
+          }
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT COLUMN -->
+    <main class="lg:w-4/5 w-full space-y-6">
+      <!-- Search bar -->
+      <div>
+        <div class="relative">
+          <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input type="text" placeholder="Search for restaurants, cuisines, and dishes"
+            class="w-full border border-gray-200 rounded-full py-3.5 pl-12 pr-5 bg-white shadow-sm focus:ring-2 focus:ring-custom-yellow">
+        </div>
+      </div>
+
+      <!-- Promo banner -->
+      <div
+        class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-custom-yellow shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="bg-yellow-100 p-3 rounded-full"
+            style="box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 6px rgba(251,206,7,0.2);"><i
+              class="fas fa-tag text-custom-yellow-dark text-xl"></i></div>
+          <span id="banner-text-signup-btn" (click)="openSignupModal($event)"
+            class="trigger-signup-modal text-gray-800 font-semibold text-lg cursor-pointer hover:text-custom-yellow-dark transition-colors">✨
+            Sign up for free delivery on your first order</span>
+        </div>
+        <button id="banner-signup-btn" (click)="openSignupModal($event)"
+          class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full shadow-md transition flex items-center gap-2"
+          style="box-shadow: 0 12px 20px -8px #FBCE07;"><i class="fas fa-pen"></i> Sign up</button>
+      </div>
+
+      <!-- Cuisines Section -->
+      <div class="mt-4 relative">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Cuisines</h2>
+        <div class="slider-container" id="cuisinesSlider" #cuisinesSlider>
+          @for (cuisine of mainCuisines; track cuisine.name) {
+          <div class="cuisine-card">
+            <div class="cuisine-img-container">
+              <img [src]="cuisine.image" [alt]="cuisine.name">
+            </div>
+            <span class="block">{{ cuisine.name }}</span>
+          </div>
+          }
+        </div>
+        <div class="scroll-btn hidden md:flex" (click)="scrollSlider(cuisinesSlider, 200)">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </div>
+      </div>
+
+      <!-- DAILY DEALS -->
+      <div class="mt-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Your daily deals</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @for (deal of dailyDeals; track deal.title) {
+          <div
+            class="deal-card bg-[#FEF9C3] rounded-2xl overflow-hidden flex flex-row items-center relative h-48 border border-[#FBCE07] shadow-sm">
+            <div class="p-6 z-10 w-1/2">
+              @if (deal.logo) {
+              <div class="bg-white p-1 rounded-md mb-2 w-10 h-10 flex items-center justify-center">
+                <img [src]="deal.logo" [alt]="deal.title + ' Logo'" class="w-full h-full object-contain">
+              </div>
+              }
+              <div
+                [class]="deal.discountClass || 'bg-[#FBCE07] text-gray-800 text-sm md:text-lg font-bold px-3 py-1 rounded-lg inline-block'">
+                {{ deal.discount }}
+              </div>
+              <div
+                class="mt-2 text-gray-800 font-bold bg-white/80 px-2 py-0.5 rounded inline-block text-[10px] md:text-xs">
+                {{ deal.title }}</div>
+            </div>
+            <div class="absolute right-0 bottom-0 h-full w-3/5">
+              <img [src]="deal.image" [alt]="deal.title" class="h-full w-full object-cover">
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- HOME CHEF SECTION -->
+      <div class="mt-10 relative">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Home chef</h2>
+        <div class="slider-container" id="homeChefSlider" #homeChefSlider>
+          @for (chef of homeChefs; track chef.name) {
+          <div
+            class="slider-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card relative"
+            [class.opacity-60]="!chef.isAvailable">
+            <div class="relative">
+              <img [src]="chef.image" [alt]="chef.name" class="w-full h-40 object-cover">
+              @if (!chef.isAvailable) {
+              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-3 animate-fade-in">
+                <span class="text-white font-black text-xs mb-2 text-center drop-shadow-md">Closed until {{
+                  chef.closedUntil || '17:00' }}</span>
+                <button
+                  class="bg-white text-gray-800 px-4 py-1.5 rounded-full text-[10px] font-black shadow-lg hover:bg-gray-100 transition-all uppercase tracking-tight transform hover:scale-105 active:scale-95">
+                  Order for later
+                </button>
+              </div>
+              }
+              @if (chef.isHomeChef) {
+              <div
+                class="absolute right-3 bottom-10 w-12 h-12 rounded-full border-4 border-white shadow-md bg-[#FBCE07] flex items-center justify-center overflow-hidden">
+                <div class="text-[8px] text-gray-800 font-bold text-center leading-tight">Home<br>chef</div>
+              </div>
+              }
+              <!-- Promotional Badges -->
+              <div class="absolute top-3 left-0 flex flex-col gap-1">
+                @for (badge of chef.badges; track badge) {
+                <span class="bg-custom-yellow text-gray-800 text-[10px] font-bold px-2 py-0.5 rounded-r-md shadow-sm">
+                  {{ badge }}
+                </span>
+                }
+              </div>
+              @if (chef.isAd) {
+              <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">Ad</span>
+              }
+            </div>
+            <div class="p-3">
+              <div class="flex justify-between items-start">
+                <h3 class="font-bold text-gray-800 text-lg leading-tight truncate pr-2">{{ chef.name }}</h3>
+                <div class="flex items-center text-xs font-semibold shrink-0">
+                  <i class="fas fa-star text-custom-yellow mr-1"></i> {{ chef.rating }} <span
+                    class="text-gray-400 font-normal ml-0.5">({{ chef.reviews }})</span>
+                </div>
+              </div>
+              <p class="text-[13px] text-gray-500 mt-0.5">{{ chef.time }} • {{ chef.priceLevel }} • {{ chef.cuisine }}
+              </p>
+              <div class="mt-2 space-y-1">
+                @if (chef.delivery === 'Free') {
+                <div class="text-[13px] font-medium text-custom-yellow-dark flex items-center">
+                  <i class="fas fa-motorcycle mr-1.5 text-xs"></i> Free delivery
+                </div>
+                } @else {
+                <div class="text-[13px] font-medium text-gray-600 flex items-center">
+                  <i class="fas fa-motorcycle mr-1.5 text-xs"></i> {{ chef.delivery }}
+                </div>
+                }
+                @if (chef.offer) {
+                <div
+                  class="inline-flex items-center bg-yellow-50 text-custom-yellow-dark text-[11px] font-bold px-2 py-0.5 rounded-md border border-yellow-100">
+                  <i class="fas fa-percentage mr-1"></i> {{ chef.offer }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="scroll-btn hidden md:flex" (click)="scrollSlider(homeChefSlider, 300)">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </div>
+      </div>
+
+      <!-- TOP BRANDS SECTION -->
+      <div class="mt-12 relative">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Top brands</h2>
+        <div class="slider-container" id="topBrandsSlider" #topBrandsSlider>
+          @for (brand of topBrands; track brand.name) {
+          <div class="brand-card flex items-center gap-4">
+            <div class="brand-logo-container shadow-sm" [style.background-color]="brand.bgColor">
+              <img [src]="brand.logo" [alt]="brand.name" [class.invert]="brand.invert">
+            </div>
+            <div class="min-w-0">
+              <h4 class="font-bold text-gray-800 truncate">{{ brand.name }}</h4>
+              <p class="text-[13px] text-gray-500">{{ brand.time }}</p>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="scroll-btn hidden md:flex" (click)="scrollSlider(topBrandsSlider, 200)">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </div>
+      </div>
+
+      <!-- PEPSI DEALS SECTION -->
+      <div class="mt-12 relative">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Pepsi deals</h2>
+        <div class="slider-container" id="pepsiDealsSlider" #pepsiDealsSlider>
+          @for (pepsi of pepsiDeals; track pepsi.name) {
+          <div
+            class="slider-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card">
+            <div class="relative">
+              <img [src]="pepsi.image" [alt]="pepsi.name">
+              @if (pepsi.isAd) {
+              <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">Ad</span>
+              }
+            </div>
+            <div class="p-3">
+              <div class="flex justify-between items-start">
+                <h3 class="font-bold text-gray-800 text-lg leading-tight">{{ pepsi.name }}</h3>
+                <div class="flex items-center text-xs font-semibold">
+                  <i class="fas fa-star text-[#FF9529] mr-1"></i> {{ pepsi.rating }} <span
+                    class="text-gray-400 font-normal ml-0.5">({{ pepsi.reviews }})</span>
+                </div>
+              </div>
+              <p class="text-[13px] text-gray-500 mt-0.5">{{ pepsi.time }} • {{ pepsi.price }} • {{ pepsi.category }}
+              </p>
+              <div class="mt-2">
+                <div class="text-[13px] font-medium text-gray-600 flex items-center">
+                  <i class="fas fa-bicycle mr-1.5 text-xs"></i> {{ pepsi.deliveryInfo }}
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="scroll-btn hidden md:flex" (click)="scrollSlider(pepsiDealsSlider, 300)">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </div>
+      </div>
+
+      <!-- TOP SHOPS SECTION -->
+      <div class="mt-12 relative">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Top shops</h2>
+        <div class="slider-container" id="topShopsSlider" #topShopsSlider>
+          @for (shop of topShops; track shop.name) {
+          <div class="brand-card flex items-center gap-4">
+            <div class="brand-logo-container shadow-sm border border-gray-100 overflow-hidden bg-white">
+              @if (shop.logo) {
+              <img [src]="shop.logo" [alt]="shop.name" class="w-full h-full object-cover">
+              } @else {
+              <div class="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400">
+                <i class="fas fa-store text-2xl"></i>
+              </div>
+              }
+            </div>
+            <div class="min-w-0">
+              <h4 class="font-bold text-gray-800 truncate">{{ shop.name }}</h4>
+              <p class="text-[13px] text-gray-500">{{ shop.time }}</p>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="scroll-btn hidden md:flex" (click)="scrollSlider(topShopsSlider, 200)">
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </div>
+      </div>
+      <!-- ALL RESTAURANTS SECTION -->
+      <div class="mt-16">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">All restaurants</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          @for (chef of homeChefs; track chef.name) {
+          <div
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card relative hover:shadow-xl transition-all h-full flex flex-col"
+            [class.opacity-60]="!chef.isAvailable">
+            <div class="relative h-48">
+              <img [src]="chef.image" [alt]="chef.name" class="w-full h-full object-cover">
+              @if (!chef.isAvailable) {
+              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-4 animate-fade-in">
+                <span class="text-white font-black text-base mb-3 text-center drop-shadow-md">Closed until {{
+                  chef.closedUntil || '17:00' }}</span>
+                <button
+                  class="bg-white text-gray-800 px-6 py-2 rounded-full text-xs font-black shadow-lg hover:bg-gray-100 transition-all uppercase tracking-tight transform hover:scale-105 active:scale-95">
+                  Order for later
+                </button>
+              </div>
+              }
+              <!-- Promotional Badges -->
+              <div class="absolute top-3 left-0 flex flex-col gap-1">
+                @for (badge of chef.badges; track badge) {
+                <span class="bg-custom-yellow text-gray-800 text-[10px] font-bold px-2 py-0.5 rounded-r-md shadow-sm">
+                  {{ badge }}
+                </span>
+                }
+              </div>
+              @if (chef.isAd) {
+              <span class="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">Ad</span>
+              }
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-bold text-gray-800 text-xl leading-tight truncate pr-2">{{ chef.name }}</h3>
+                <div class="flex items-center text-sm font-semibold shrink-0">
+                  <i class="fas fa-star text-custom-yellow mr-1"></i> {{ chef.rating }} <span
+                    class="text-gray-400 font-normal ml-0.5">({{ chef.reviews }})</span>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500">{{ chef.time }} • {{ chef.priceLevel }} • {{ chef.cuisine }}</p>
+              <div class="mt-auto pt-4 space-y-2">
+                <div class="text-sm font-medium text-custom-yellow-dark flex items-center">
+                  <i class="fas fa-motorcycle mr-2 text-xs"></i>
+                  {{ chef.delivery === 'Free' ? 'Free delivery' : chef.delivery }}
+                </div>
+                @if (chef.offer) {
+                <div
+                  class="inline-flex items-center bg-yellow-50 text-custom-yellow-dark text-xs font-bold px-3 py-1 rounded-md border border-yellow-100">
+                  <i class="fas fa-percentage mr-1.5"></i> {{ chef.offer }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      <!-- CITIES GRID SECTION -->
+      <div class="mt-24">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 px-4 md:px-0">Find us in these cities and many more!</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-0">
+          @for (city of pakistaniCitiesGrid; track city.name) {
+          <div
+            class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all">
+            <img [src]="city.image" [alt]="city.name"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+            <div class="absolute bottom-4 left-4">
+              <span class="bg-white/90 backdrop-blur-sm text-gray-800 font-bold px-4 py-2 rounded-xl shadow-lg">
+                {{ city.name }}
+              </span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- JOIN US / PARTNER SECTION -->
+      <div class="mt-24 bg-gray-50 -mx-4 px-4 sm:-mx-8 sm:px-8 py-16">
+        <div class="max-w-7xl mx-auto px-4 md:px-0">
+          <h2 class="text-3xl font-bold text-gray-800 mb-12">You prepare the food, we'll deliver it</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            @for (card of partnerCards; track card.title) {
+            <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 flex flex-col group">
+              <div class="h-64 overflow-hidden relative">
+                <img [src]="card.image" [alt]="card.title"
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <div class="absolute top-4 left-4">
+                  <span class="bg-white/95 text-gray-800 font-bold text-lg px-6 py-3 rounded-2xl shadow-xl">
+                    {{ card.title }}
+                  </span>
+                </div>
+              </div>
+              <div class="p-8 flex flex-col flex-grow">
+                <p class="text-gray-600 mb-8 leading-relaxed">{{ card.description }}</p>
+                <div class="mt-auto">
+                  <button
+                    class="bg-custom-yellow hover:bg-yellow-400 text-gray-800 font-bold px-8 py-4 rounded-2xl shadow-lg transition-all flex items-center gap-3">
+                    {{ card.buttonText }} <i class="fas fa-chevron-right text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========== NEW FOOTER SECTION ========== -->
+  <footer class="mt-20 relative">
+    <!-- Footer Background Wrapper -->
+    <div class="footer-dark text-white pt-20 pb-12">
+      <!-- Newsletter Banner (Moved inside for consistent context) -->
+      <div class="max-w-7xl mx-auto px-4 mb-20">
+        <div
+          class="bg-white rounded-[2rem] p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8 overflow-hidden border-4 border-white/10">
+          <div class="md:w-1/3 w-full h-56 relative overflow-hidden rounded-2xl group">
+            <img src="https://images.unsplash.com/photo-1544124499-58912cbddaad?auto=format&fit=crop&q=80&w=600"
+              alt="Food Newsletter"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+              <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center text-gray-800 shadow-lg">
+                <i class="fas fa-play ml-1"></i>
+              </div>
+            </div>
+          </div>
+          <div class="md:w-2/3 w-full text-left">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-custom-yellow font-bold uppercase tracking-widest text-xs">Newsletters</span>
+              <div class="h-[1px] w-12 bg-custom-yellow/30"></div>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-black text-gray-800 mb-4 leading-tight relative inline-block">
+              Get Every Single Menu Notification
+              <span class="absolute -bottom-2 left-0 w-12 h-1 bg-custom-yellow rounded-full"></span>
+            </h3>
+            <div class="flex flex-wrap gap-4 mb-8">
+              @for (update of ['Regular', 'Weekly', 'Monthly']; track update) {
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center text-[10px] text-custom-yellow shadow-md">
+                  <i class="fas fa-check"></i>
+                </div>
+                <span class="text-gray-600 font-semibold text-sm">{{ update }} Updates</span>
+              </div>
+              }
+            </div>
+            <div class="relative max-w-lg">
+              <div
+                class="flex items-center bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden shadow-inner p-1">
+                <i class="far fa-envelope text-gray-400 ml-4 shrink-0"></i>
+                <input type="email" placeholder="Enter your email"
+                  class="w-full py-3 px-4 bg-transparent focus:outline-none text-gray-700 font-medium">
+                <button
+                  class="bg-custom-yellow hover:bg-yellow-400 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-95 shrink-0 flex items-center gap-2">
+                  Subscribe <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO / INFORMATIONAL BLOCKS -->
+      <div class="max-w-7xl mx-auto px-4 mb-24 pb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 text-sm text-gray-400 leading-relaxed text-left">
+          <div class="space-y-6">
+            <h3 class="text-2xl font-bold text-white tracking-tight">Food delivery in Islamabad</h3>
+            <p>Perhaps you are a die-hard fan of local delicacies prepared in a traditional way. Angeethi, Andaaz,
+              Al-Nakheel Lebanese Cuisine, and Islamabad Grill are a few of the excellent places you can consider for
+              authentic Pakistani food prepared just like at home.</p>
+            <p>Looking for the best pizza places in Islamabad? Want to treat your friends to the finest sandwiches in
+              the city? Noshahi Panda makes it easy to find and order exactly what you're craving with fast delivery and
+              great deals.</p>
+          </div>
+          <div class="space-y-6">
+            <h3 class="text-2xl font-bold text-white tracking-tight">Famous restaurants for online delivery</h3>
+            <p>With Noshahi Panda, you have access to a wide range of restaurants catering to every taste and occasion.
+              From the spicy biryani of Savour Foods to the international flavours of KFC and Subway, our platform
+              brings the best of the city to your doorstep.</p>
+            <p>Our dedicated delivery fleet ensures that your food reaches you hot and fresh, whether it's a quick lunch
+              at the office or a late-night craving at home. Enjoy the convenience of online food ordering with the best
+              deals.</p>
+          </div>
+        </div>
+
+        <!-- FAQ INGRID SECTION -->
+        <div class="mt-20">
+          <h3 class="text-2xl font-bold text-white mb-10 text-center relative inline-block mx-auto">
+            Frequently Asked Questions
+            <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-white rounded-full"></span>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 text-left">
+            <div class="group">
+              <h4 class="font-bold text-custom-yellow mb-2 flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-custom-yellow group-hover:scale-150 transition-transform"></span>
+                How can I get noshahi panda delivery?
+              </h4>
+              <p class="text-sm text-gray-400 border-l border-gray-800 ml-1 pl-4">Simply enter your address, choose a
+                restaurant or shop, and place your order. We handle the rest!</p>
+            </div>
+            <div class="group">
+              <h4 class="font-bold text-custom-yellow mb-2 flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-custom-yellow group-hover:scale-150 transition-transform"></span>
+                Which restaurants have free delivery?
+              </h4>
+              <p class="text-sm text-gray-400 border-l border-gray-800 ml-1 pl-4">Many of our partners offer free
+                delivery. Look for the "Free delivery" badge on restaurant cards.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Footer Body -->
+      <div class="max-w-7xl mx-auto px-4 pb-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
+          <!-- Brand Column -->
+          <div class="space-y-6">
+            <div class="text-3xl font-black text-custom-yellow tracking-tighter">Noshahi panda</div>
+            <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+              Bringing the flavors of Pakistan to your doorstep with speed and care. Your favorite food, just a click
+              away.
+            </p>
+            <div class="flex gap-4">
+              <a href="#" class="social-icon-circle"><i class="fab fa-facebook-f text-sm"></i></a>
+              <a href="#" class="social-icon-circle"><i class="fab fa-instagram text-sm"></i></a>
+              <a href="#" class="social-icon-circle"><i class="fab fa-twitter text-sm"></i></a>
+            </div>
+          </div>
+
+          <!-- Links Columns -->
+          @for (column of footerColumns; track column.title) {
+          <div>
+            <h4 class="text-lg font-bold mb-8 relative text-white uppercase tracking-wider">
+              {{ column.title }}
+              <span class="absolute -bottom-3 left-0 w-8 h-1 bg-custom-yellow rounded-full"></span>
+            </h4>
+            <ul class="space-y-4">
+              @for (link of column.links; track link) {
+              <li>
+                <a href="#" class="footer-link-v2 group">
+                  <i
+                    class="fas fa-chevron-right text-[10px] text-custom-yellow opacity-0 group-hover:opacity-100 transition-all -ml-2 group-hover:ml-0"></i>
+                  <span>{{ link }}</span>
+                </a>
+              </li>
+              }
+            </ul>
+          </div>
+          }
+
+          <!-- Contact & Download -->
+          <div class="space-y-10">
+            <div>
+              <h4 class="text-lg font-bold mb-8 relative text-white uppercase tracking-wider">
+                Contact Us
+                <span class="absolute -bottom-3 left-0 w-8 h-1 bg-custom-yellow rounded-full"></span>
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-center gap-4 text-sm text-gray-400 font-medium group whitespace-nowrap">
+                  <i class="fas fa-phone-alt text-custom-yellow w-5 shrink-0"></i>
+                  <span>+44 (0) 9865 124 765</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm text-gray-400 font-medium group">
+                  <i class="far fa-envelope text-custom-yellow w-5 shrink-0"></i>
+                  <span class="truncate">info@yourdomain.com</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <a href="#" class="footer-app-btn group">
+                <i class="fab fa-google-play text-2xl"></i>
+                <div class="flex flex-col">
+                  <span class="text-[9px] text-gray-500 font-black uppercase leading-none mb-1">Available on</span>
+                  <span
+                    class="text-sm font-bold text-white group-hover:text-custom-yellow transition-colors leading-none">Google
+                    Play</span>
+                </div>
+              </a>
+              <a href="#" class="footer-app-btn group">
+                <i class="fab fa-apple text-2xl"></i>
+                <div class="flex flex-col">
+                  <span class="text-[9px] text-gray-500 font-black uppercase leading-none mb-1">Download on</span>
+                  <span
+                    class="text-sm font-bold text-white group-hover:text-custom-yellow transition-colors leading-none">App
+                    Store</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="footer-dark border-t border-gray-800 py-10 pb-24 md:pb-10">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="text-gray-500 text-sm font-medium order-2 md:order-1">
+          © 2024 <span class="text-custom-yellow font-bold mx-1">Noshahi Panda</span> • All rights reserved.
+        </div>
+        <div class="flex flex-col md:flex-row items-center gap-6 order-1 md:order-2">
+          <span class="text-gray-500 text-xs font-black uppercase tracking-[0.2em]">Safe Payments</span>
+          <div class="flex flex-wrap justify-center gap-3">
+            @for (payment of ['PayPal', 'MasterCard', 'VISA', 'Discover', 'Amex']; track payment) {
+            <div
+              class="bg-gray-800/50 border border-gray-700 px-4 py-2 rounded-lg grayscale hover:grayscale-0 transition-all cursor-default">
+              <span class="text-[10px] font-black tracking-widest uppercase"
+                [class.text-blue-400]="payment === 'PayPal'" [class.text-red-400]="payment === 'MasterCard'"
+                [class.text-blue-300]="payment === 'VISA'" [class.text-orange-300]="payment === 'Discover'"
+                [class.text-green-400]="payment === 'Amex'">
+                {{ payment }}
+              </span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- STICKY BOTTOM BANNER -->
+@if (showStickyBanner()) {
+<div
+  class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[99] p-4 animate-slide-up">
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-custom-yellow text-2xl">
+        <i class="fas fa-gift"></i>
+      </div>
+      <div>
+        <h4 class="font-bold text-gray-800 text-sm md:text-base">Get free delivery on your first order!</h4>
+        <p class="text-gray-500 text-xs md:text-sm">Sign up now and enjoy special discounts.</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button (click)="openSignupModal($event)"
+        class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold px-6 py-2.5 rounded-full shadow-md transition whitespace-nowrap text-sm">
+        Sign up now
+      </button>
+      <button (click)="showStickyBanner.set(false)" class="text-gray-400 hover:text-gray-600 p-2">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- ========== SIGNUP MODAL HTML ========== -->
+@if (showSignupModal()) {
+<div id="signupModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 active">
+  <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl relative p-8">
+    <button id="closeModal" (click)="showSignupModal.set(false)"
+      class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 transition">
+      <i class="fas fa-times text-xl"></i>
+    </button>
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome!</h2>
+    <p class="text-gray-600 mb-8">Sign up or log in to continue</p>
+    <button class="social-btn btn-facebook">Continue with Facebook</button>
+    <button class="social-btn btn-google">
+      <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" class="w-5 h-5 mr-3">
+      Continue with Google
+    </button>
+    <button class="social-btn btn-apple"><i class="fab fa-apple text-xl mr-3"></i>Continue with Apple</button>
+    <div class="divider-text">or</div>
+    <button class="social-btn btn-login mb-4">Log in</button>
+    <button class="social-btn btn-signup-outline">Sign up</button>
+    <p class="text-xs text-center text-gray-500 mt-8 leading-relaxed">
+      By signing up, you agree to our <a href="#" class="text-custom-yellow-dark hover:underline">Terms and
+        Conditions</a> and
+      <a href="#" class="text-custom-yellow-dark hover:underline">Privacy Policy</a>.
+    </p>
+  </div>
+</div>
+}
