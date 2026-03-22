@@ -1,10 +1,12 @@
 import { Component, signal, computed } from '@angular/core';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
-    standalone: true
+    standalone: true,
+    imports: [NgIf]
 })
 export class HomeComponent {
     // --- Signals & State ---
@@ -88,6 +90,7 @@ export class HomeComponent {
             isHomeChef: true,
             isAd: true,
             isAvailable: true,
+            isSuper: true,
             badges: ['Saver', 'Free delivery']
         },
         {
@@ -132,6 +135,53 @@ export class HomeComponent {
         }
     ];
 
+    public readonly filteredHomeChefs = computed(() => {
+        const filters = this.quickFilters();
+        const sortKey = this.activeSort();
+
+        const parseMinTime = (time: string) => {
+            const match = time.match(/(\d+)(?:-(\d+))?/);
+            if (!match) return Number.MAX_SAFE_INTEGER;
+            return Number(match[1]);
+        };
+
+        const parsePrice = (priceLevel: string) => (priceLevel.match(/\$/g) || []).length;
+
+        let list = [...this.homeChefs];
+
+        if (filters.get('ratings')) {
+            list = list.filter(chef => Number(chef.rating) >= 4);
+        }
+
+        if (filters.get('super')) {
+            list = list.filter(chef => !!chef.isSuper);
+        }
+
+        if (filters.get('Free delivery')) {
+            list = list.filter(chef => chef.delivery?.toLowerCase() === 'free');
+        }
+
+        if (filters.get('Deals')) {
+            list = list.filter(chef => !!chef.offer);
+        }
+
+        // Sort
+        if (sortKey === 'Fastest delivery') {
+            list.sort((a, b) => parseMinTime(a.time) - parseMinTime(b.time));
+        } else if (sortKey === 'Top rated') {
+            list.sort((a, b) => Number(b.rating) - Number(a.rating));
+        } else if (sortKey === 'Price: Low to High') {
+            list.sort((a, b) => parsePrice(a.priceLevel) - parsePrice(b.priceLevel));
+        }
+
+        return list;
+    });
+
+    public readonly pickupRestaurants = computed(() => {
+        // For pickup we show only currently available chefs and highlight home-chef options
+        return this.homeChefs.filter(chef => chef.isAvailable);
+    });
+
     public readonly topBrands = [
         { name: 'KFC', time: '30 min', logo: 'https://logos-world.net/wp-content/uploads/2020/04/KFC-Logo.png' },
         { name: 'Layers Bakeshop', time: '10 min', logo: 'images/layers.jpg', bgColor: '#F5F5F5' },
@@ -154,15 +204,15 @@ export class HomeComponent {
     ];
 
     public readonly pakistaniCitiesGrid = [
-        { name: 'Islamabad', image: 'https://images.unsplash.com/photo-1622546758596-f1f06ba11f58?w=500' },
-        { name: 'Karachi', image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500' },
-        { name: 'Lahore', image: 'https://images.unsplash.com/photo-1582239484084-338241432f81?w=500' },
-        { name: 'Faisalabad', image: 'https://images.unsplash.com/photo-1616423640220-43285750059b?w=500' },
-        { name: 'Rawalpindi', image: 'https://images.unsplash.com/photo-1529154691717-3306083d869e?w=500' },
-        { name: 'Multan', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500' },
-        { name: 'Hyderabad', image: 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=500' },
-        { name: 'Peshawar', image: 'https://images.unsplash.com/photo-1594142404563-64cccaf5a10f?w=500' },
-        { name: 'Quetta', image: 'https://images.unsplash.com/photo-1623910543717-370133c94f5b?w=500' }
+        { name: 'Islamabad', image: 'https://images.unsplash.com/photo-1664185494391-3c6c78244473?auto=format&fit=crop&w=500' },
+        { name: 'Karachi', image: 'https://images.unsplash.com/photo-1611068661807-c850d6a24f62?auto=format&fit=crop&w=500' },
+        { name: 'Lahore', image: 'https://images.unsplash.com/photo-1599079027267-7d0cea474b07?auto=format&fit=crop&w=500' },
+        { name: 'Faisalabad', image: 'https://images.unsplash.com/photo-1596798432210-63839ee4c486?auto=format&fit=crop&w=500' },
+        { name: 'Rawalpindi', image: 'https://images.unsplash.com/photo-1720507334744-02dce2b6794d?auto=format&fit=crop&w=500' },
+        { name: 'Multan', image: 'https://images.unsplash.com/photo-1598461814968-639d9321f483?auto=format&fit=crop&w=500' },
+        { name: 'Hyderabad', image: 'https://images.unsplash.com/photo-1587966606400-22bd02e9b907?auto=format&fit=crop&w=500' },
+        { name: 'Peshawar', image: 'https://images.unsplash.com/photo-1679809470940-d7d0cea474b0?auto=format&fit=crop&w=500' },
+        { name: 'Quetta', image: 'https://images.unsplash.com/photo-1646606161337-d644f966e672?auto=format&fit=crop&w=500' }
     ];
 
     public readonly partnerCards = [
@@ -217,9 +267,7 @@ export class HomeComponent {
         this.quickFilters.set(current);
     }
 
-    public openSignupModal(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
+    public openSignupModal() {
         this.showSignupModal.set(true);
     }
 

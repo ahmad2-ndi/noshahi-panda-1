@@ -376,6 +376,61 @@ button:active {
   /* Dark text for better contrast on yellow */
 }
 
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* --- Pickup Section Specifics --- */
+.restaurant-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.restaurant-card:hover {
+    transform: translateY(-8px);
+}
+
+/* --- Tabs --- */
+.tab-btn {
+    position: relative;
+    transition: all 0.3s ease;
+    border-bottom-width: 3px;
+}
+
+.active-tab {
+    color: #fbce07 !important;
+    border-bottom-color: #fbce07 !important;
+}
+
+.tab-btn:hover:not(.active-tab) {
+    color: #888;
+    border-bottom-color: #eee;
+}
+
+/* Glassmorphism effects */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Shadow utilities for premium look */
+.shadow-premium {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 
+                0 15px 25px -10px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-premium:hover {
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.1), 
+                0 18px 36px -18px rgba(0, 0, 0, 0.05);
+}
+
 .btn-login:hover {
   background-color: #EAB308;
 }

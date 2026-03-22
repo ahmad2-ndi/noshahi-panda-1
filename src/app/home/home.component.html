@@ -1,11 +1,3 @@
-<!-- ========== TOP UTILITY BAR ========== -->
-<div class="bg-[#262626] text-white py-2 text-xs hidden md:block">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end gap-6 uppercase font-bold tracking-wider">
-    <a href="#" class="hover:text-custom-yellow transition-colors">Become a partner</a>
-    <a href="#" class="hover:text-custom-yellow transition-colors">pandago for business</a>
-  </div>
-</div>
-
 <!-- ========== FIXED HEADER ========== -->
 <div class="fixed top-0 left-0 w-full bg-white shadow-md z-50 md:mt-0"
   [style.top]="isScrolled() ? '0' : (isDesktop() ? '32px' : '0')">
@@ -50,15 +42,15 @@
         </div>
       </div>
       <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
-        <a href="#" (click)="openSignupModal($event)"
-          class="trigger-signup-modal text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer">Log
-          in</a>
-        <a href="#" (click)="openSignupModal($event)"
+        <button type="button" (click)="openSignupModal()"
+          class="trigger-signup-modal text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
+          in</button>
+        <button type="button" (click)="openSignupModal()"
           class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center gap-1"
           style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
           <i class="fas fa-gift"></i> <span class="hidden sm:inline">Sign up for free delivery</span><span
             class="sm:hidden">Sign up</span>
-        </a>
+        </button>
         <button class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-colors relative">
           <i class="fas fa-shopping-bag text-xl"></i>
           <span
@@ -89,10 +81,29 @@
 <!-- ========== MAIN CONTENT ========== -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 main-3d"
   style="transform-style: preserve-3d; padding-top: 140px;">
+
+  <!-- Promo banner (Common) -->
+  <div
+    class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-custom-yellow shadow-sm mb-8 animate-fade-in">
+    <div class="flex items-center gap-3">
+      <div class="bg-yellow-100 p-3 rounded-full"
+        style="box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 6px rgba(251,206,7,0.2);"><i
+          class="fas fa-tag text-custom-yellow-dark text-xl"></i></div>
+      <span id="banner-text-signup-btn" (click)="openSignupModal()"
+        class="trigger-signup-modal text-gray-800 font-semibold text-lg cursor-pointer hover:text-custom-yellow-dark transition-colors">✨
+        Sign up for free delivery on your first order</span>
+    </div>
+    <button id="banner-signup-btn" (click)="openSignupModal()"
+      class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full shadow-md transition flex items-center gap-2"
+      style="box-shadow: 0 12px 20px -8px #FBCE07;"><i class="fas fa-pen"></i> Sign up</button>
+  </div>
+
+  <!-- DELIVERY TAB CONTENT -->
+  <ng-container *ngIf="activeTab() === 'delivery'">
   <!-- TWO COLUMN LAYOUT -->
   <div class="flex flex-col lg:flex-row gap-8 mt-2">
     <!-- LEFT COLUMN (filters, offers, cuisines) -->
-    <aside class="lg:w-1/5 w-full space-y-4">
+    <aside class="lg:w-1/5 w-full space-y-4 lg:sticky lg:top-36 lg:self-start">
       <div class="text-lg font-semibold text-gray-800">Filters</div>
       <div>
         <div class="text-sm font-medium text-gray-600 mb-2">Sort by</div>
@@ -173,21 +184,6 @@
         </div>
       </div>
 
-      <!-- Promo banner -->
-      <div
-        class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-custom-yellow shadow-sm">
-        <div class="flex items-center gap-3">
-          <div class="bg-yellow-100 p-3 rounded-full"
-            style="box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 6px rgba(251,206,7,0.2);"><i
-              class="fas fa-tag text-custom-yellow-dark text-xl"></i></div>
-          <span id="banner-text-signup-btn" (click)="openSignupModal($event)"
-            class="trigger-signup-modal text-gray-800 font-semibold text-lg cursor-pointer hover:text-custom-yellow-dark transition-colors">✨
-            Sign up for free delivery on your first order</span>
-        </div>
-        <button id="banner-signup-btn" (click)="openSignupModal($event)"
-          class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full shadow-md transition flex items-center gap-2"
-          style="box-shadow: 0 12px 20px -8px #FBCE07;"><i class="fas fa-pen"></i> Sign up</button>
-      </div>
 
       <!-- Cuisines Section -->
       <div class="mt-4 relative">
@@ -240,7 +236,7 @@
       <div class="mt-10 relative">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">Home chef</h2>
         <div class="slider-container" id="homeChefSlider" #homeChefSlider>
-          @for (chef of homeChefs; track chef.name) {
+          @for (chef of filteredHomeChefs(); track chef.name) {
           <div
             class="slider-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card relative"
             [class.opacity-60]="!chef.isAvailable">
@@ -398,7 +394,7 @@
       <div class="mt-16">
         <h2 class="text-3xl font-bold text-gray-800 mb-8">All restaurants</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          @for (chef of homeChefs; track chef.name) {
+          @for (chef of filteredHomeChefs(); track chef.name) {
           <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card relative hover:shadow-xl transition-all h-full flex flex-col"
             [class.opacity-60]="!chef.isAvailable">
@@ -452,48 +448,62 @@
           }
         </div>
       </div>
-      <!-- CITIES GRID SECTION -->
-      <div class="mt-24">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 px-4 md:px-0">Find us in these cities and many more!</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-0">
-          @for (city of pakistaniCitiesGrid; track city.name) {
-          <div
-            class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all">
-            <img [src]="city.image" [alt]="city.name"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
-            <div class="absolute bottom-4 left-4">
-              <span class="bg-white/90 backdrop-blur-sm text-gray-800 font-bold px-4 py-2 rounded-xl shadow-lg">
-                {{ city.name }}
-              </span>
-            </div>
+    </main>
+  </div>
+</ng-container>
+
+  <!-- PICKUP TAB CONTENT -->
+  <ng-container *ngIf="activeTab() === 'pickup'">
+    <div class="space-y-10 animate-fade-in">
+      <!-- Pickup Hero / Search -->
+      <div class="relative rounded-3xl overflow-hidden h-64 md:h-80 shadow-2xl group">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=1200" 
+             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Pickup Background">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent flex flex-col justify-center px-8 md:px-16">
+          <h2 class="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">Pickup near you</h2>
+          <p class="text-white/90 text-lg mb-8 max-w-md hidden md:block">Find the best spots to grab and go. No delivery fees, just great food.</p>
+          <div class="relative max-w-xl">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" placeholder="Search for stores or deals..." 
+                   class="w-full py-4 pl-12 pr-6 rounded-2xl bg-white/95 backdrop-blur-md border-none shadow-xl focus:ring-4 focus:ring-custom-yellow/50 transition-all font-medium">
           </div>
-          }
         </div>
       </div>
 
-      <!-- JOIN US / PARTNER SECTION -->
-      <div class="mt-24 bg-gray-50 -mx-4 px-4 sm:-mx-8 sm:px-8 py-16">
-        <div class="max-w-7xl mx-auto px-4 md:px-0">
-          <h2 class="text-3xl font-bold text-gray-800 mb-12">You prepare the food, we'll deliver it</h2>
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            @for (card of partnerCards; track card.title) {
-            <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 flex flex-col group">
-              <div class="h-64 overflow-hidden relative">
-                <img [src]="card.image" [alt]="card.title"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute top-4 left-4">
-                  <span class="bg-white/95 text-gray-800 font-bold text-lg px-6 py-3 rounded-2xl shadow-xl">
-                    {{ card.title }}
-                  </span>
+      <!-- Pickup Features / Map Preview -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-bold text-gray-800">Stores near you</h3>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 bg-gray-100 hover:bg-custom-yellow rounded-xl text-sm font-bold transition-all">Distance</button>
+              <button class="px-4 py-2 bg-gray-100 hover:bg-custom-yellow rounded-xl text-sm font-bold transition-all">Rating</button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @for (chef of pickupRestaurants(); track chef.name) {
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden restaurant-card group hover:shadow-2xl transition-all h-full flex flex-col">
+              <div class="relative h-40">
+                <img [src]="chef.image" [alt]="chef.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-md">
+                  <span class="text-xs font-black text-gray-800">Ready in 15-20m</span>
                 </div>
               </div>
-              <div class="p-8 flex flex-col flex-grow">
-                <p class="text-gray-600 mb-8 leading-relaxed">{{ card.description }}</p>
-                <div class="mt-auto">
-                  <button
-                    class="bg-custom-yellow hover:bg-yellow-400 text-gray-800 font-bold px-8 py-4 rounded-2xl shadow-lg transition-all flex items-center gap-3">
-                    {{ card.buttonText }} <i class="fas fa-chevron-right text-xs"></i>
+              <div class="p-4 flex flex-col flex-grow">
+                <div class="flex justify-between items-start mb-1">
+                  <h4 class="font-bold text-gray-800 text-lg group-hover:text-custom-yellow-dark transition-colors">{{ chef.name }}</h4>
+                  <div class="flex items-center text-sm font-bold bg-yellow-50 px-2 py-1 rounded-lg">
+                    <i class="fas fa-star text-custom-yellow mr-1"></i> {{ chef.rating }}
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500 mb-4">{{ chef.cuisine }} • 0.8 km away</p>
+                <div class="mt-auto flex items-center justify-between pt-2 border-t border-gray-50">
+                  <span class="text-xs font-bold text-custom-yellow-dark bg-yellow-50 px-2 py-1 rounded-md">
+                    Up to 20% off
+                  </span>
+                  <button class="text-gray-800 font-bold text-xs flex items-center gap-1 group/btn">
+                    View Menu <i class="fas fa-arrow-right transition-transform group-hover/btn:translate-x-1"></i>
                   </button>
                 </div>
               </div>
@@ -501,9 +511,124 @@
             }
           </div>
         </div>
+
+        <!-- Sidebar / Map & How it works -->
+        <div class="space-y-8">
+          <div class="bg-white rounded-3xl p-6 shadow-xl border border-gray-50 relative overflow-hidden group">
+            <div class="relative z-10">
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-map-marked-alt text-custom-yellow"></i> Find on map
+              </h4>
+              <div class="h-48 rounded-2xl bg-gray-100 relative overflow-hidden shadow-inner border border-gray-200">
+                <!-- Map Placeholder Image -->
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=400" 
+                     class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700" alt="Map Preview">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="bg-white px-6 py-3 rounded-2xl shadow-2xl border border-gray-100 flex items-center gap-3 animate-bounce">
+                    <i class="fas fa-map-pin text-red-500 text-xl"></i>
+                    <span class="font-black text-gray-800">46 spots near you</span>
+                  </div>
+                </div>
+              </div>
+              <button class="w-full mt-4 bg-gray-800 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all shadow-lg active:scale-95">
+                Open Full Map
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-custom-yellow to-yellow-500 rounded-3xl p-8 shadow-2xl text-gray-900 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 rotate-12">
+              <i class="fas fa-shopping-bag text-[120px]"></i>
+            </div>
+            <h4 class="text-2xl font-black mb-6">How it works</h4>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center font-black shrink-0">1</div>
+                <p class="font-bold">Select "Pick-up" and pick a store nearby.</p>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center font-black shrink-0">2</div>
+                <p class="font-bold">Order your favorites and pay online.</p>
+              </div>
+              <div class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center font-black shrink-0">3</div>
+                <p class="font-bold">Skip the queue and collect your food.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
+  </ng-container>
+
+  <!-- OTHER TABS PLACEHOLDERS -->
+  <ng-container *ngIf="['pandamart', 'shops', 'caterers'].includes(activeTab())">
+    <div class="min-h-[60vh] flex flex-col items-center justify-center text-center animate-fade-in">
+      <div class="w-32 h-32 bg-yellow-50 rounded-full flex items-center justify-center text-custom-yellow text-5xl mb-6 shadow-2xl animate-pulse">
+        <i [class]="tabs.find(t => t.id === activeTab())?.icon"></i>
+      </div>
+      <h2 class="text-4xl font-black text-gray-800 mb-4 capitalize">{{ activeTab() }} Coming Soon</h2>
+      <p class="text-gray-500 max-w-md mx-auto text-lg">We are working hard to bring the best {{ activeTab() }} experience to your city. Stay tuned for exciting updates!</p>
+      <button (click)="activeTab.set('delivery')" class="mt-10 px-8 py-4 bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold rounded-2xl shadow-xl transition-all active:scale-95">
+        Back to Delivery
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- COMMON BOTTOM SECTIONS -->
+  <div class="animate-fade-in mt-20">
+    <!-- CITIES GRID SECTION -->
+    <div class="mt-24">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 px-4 md:px-0">Find us in these cities and many more!</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-0">
+        @for (city of pakistaniCitiesGrid; track city.name) {
+        <div
+          class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all">
+          <img [src]="city.image" [alt]="city.name"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+          <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
+          <div class="absolute bottom-4 left-4">
+            <span class="bg-white/90 backdrop-blur-sm text-gray-800 font-bold px-4 py-2 rounded-xl shadow-lg">
+              {{ city.name }}
+            </span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- JOIN US / PARTNER SECTION -->
+    <div class="mt-24 bg-gray-50 -mx-4 px-4 sm:-mx-8 sm:px-8 py-16 rounded-3xl">
+      <div class="max-w-7xl mx-auto px-4 md:px-0">
+        <h2 class="text-3xl font-bold text-gray-800 mb-12">You prepare the food, we'll deliver it</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          @for (card of partnerCards; track card.title) {
+          <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 flex flex-col group">
+            <div class="h-64 overflow-hidden relative">
+              <img [src]="card.image" [alt]="card.title"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+              <div class="absolute top-4 left-4">
+                <span class="bg-white/95 text-gray-800 font-bold text-lg px-6 py-3 rounded-2xl shadow-xl">
+                  {{ card.title }}
+                </span>
+              </div>
+            </div>
+            <div class="p-8 flex flex-col flex-grow">
+              <p class="text-gray-600 mb-8 leading-relaxed">{{ card.description }}</p>
+              <div class="mt-auto">
+                <button
+                  class="bg-custom-yellow hover:bg-yellow-400 text-gray-800 font-bold px-8 py-4 rounded-2xl shadow-lg transition-all flex items-center gap-3">
+                  {{ card.buttonText }} <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
   <!-- ========== NEW FOOTER SECTION ========== -->
   <footer class="mt-20 relative">
@@ -716,11 +841,9 @@
       </div>
     </div>
   </footer>
-</div>
 
 <!-- STICKY BOTTOM BANNER -->
-@if (showStickyBanner()) {
-<div
+<div *ngIf="showStickyBanner()"
   class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[99] p-4 animate-slide-up">
   <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
     <div class="flex items-center gap-4">
@@ -733,7 +856,7 @@
       </div>
     </div>
     <div class="flex items-center gap-3">
-      <button (click)="openSignupModal($event)"
+      <button (click)="openSignupModal()"
         class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold px-6 py-2.5 rounded-full shadow-md transition whitespace-nowrap text-sm">
         Sign up now
       </button>
@@ -743,11 +866,9 @@
     </div>
   </div>
 </div>
-}
 
 <!-- ========== SIGNUP MODAL HTML ========== -->
-@if (showSignupModal()) {
-<div id="signupModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 active">
+<div *ngIf="showSignupModal()" id="signupModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 active">
   <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl relative p-8">
     <button id="closeModal" (click)="showSignupModal.set(false)"
       class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 transition">
@@ -771,4 +892,3 @@
     </p>
   </div>
 </div>
-}
