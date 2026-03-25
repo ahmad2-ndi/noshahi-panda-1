@@ -3,7 +3,11 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
 export const serverRoutes: ServerRoute[] = [
   {
     path: 'product/:id',
-    renderMode: RenderMode.Server
+    renderMode: RenderMode.Client
+  },
+  {
+    path: 'shop/:id',
+    renderMode: RenderMode.Client
   },
   {
     path: '**',
