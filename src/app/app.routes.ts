@@ -1,6 +1,19 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { PandamartOffersComponent } from './pandamart-offers/pandamart-offers.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { ShopsComponent } from './shops/shops.component';
+import { ShopDetailComponent } from './shop-detail/shop-detail.component';
+import { CaterersComponent } from './caterers/caterers.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent }
+    { path: '', component: HomeComponent },
+    { path: 'pandamart-offers', component: PandamartOffersComponent },
+    { path: 'product/:id', component: ProductDetailComponent },
+    { path: 'checkout', component: CheckoutComponent },
+    { path: 'shops', component: ShopsComponent },
+    { path: 'shop/:id', component: ShopDetailComponent },
+    { path: 'caterers', component: CaterersComponent },
+    { path: '**', redirectTo: '' }
 ];

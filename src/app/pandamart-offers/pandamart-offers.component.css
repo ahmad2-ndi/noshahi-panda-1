@@ -1,0 +1,70 @@
+.custom-yellow { color: var(--yellow); }
+.bg-custom-yellow { background-color: var(--yellow); }
+.text-custom-yellow-dark { color: var(--yellow-dark); }
+.bg-custom-yellow-dark { background-color: var(--yellow-dark); }
+
+.discount-badge {
+    background: var(--yellow);
+    color: #374151; /* Dark text for contrast */
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-weight: 900;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 16px -4px rgba(251, 206, 7, 0.4);
+}
+
+.add-btn {
+    background: var(--yellow);
+    color: #374151;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.add-btn:hover {
+    transform: scale(1.1) rotate(90deg) translateZ(20px);
+    background: var(--yellow-dark);
+    box-shadow: 0 10px 20px -5px rgba(251, 206, 7, 0.5);
+}
+
+.product-card {
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-style: preserve-3d;
+    perspective: 1200px;
+}
+
+.product-card:hover {
+    transform: translateY(-20px) rotateX(6deg) rotateY(-4deg) translateZ(30px);
+    box-shadow: 
+        0 40px 80px -15px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(251, 206, 7, 0.3),
+        0 15px 50px -10px rgba(251, 206, 7, 0.4);
+}
+
+.product-card img {
+    transition: all 0.5s ease;
+    transform: translateZ(10px);
+}
+
+.product-card:hover img {
+    transform: scale(1.1) translateZ(40px);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

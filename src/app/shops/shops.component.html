@@ -1,0 +1,118 @@
+<app-header></app-header>
+
+<div class="shops-container bg-[#f7f7f7] min-h-screen pb-20">
+  <!-- Hero Section -->
+  <header class="bg-white border-b border-gray-100 pt-32 pb-12">
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 font-medium">
+        <a routerLink="/" class="hover:text-custom-yellow transition-colors">Home</a>
+        <i class="fas fa-chevron-right text-[10px]"></i>
+        <span class="text-gray-900">Shops</span>
+      </nav>
+
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 class="text-4xl font-black text-gray-900 mb-2">Featured Shops</h1>
+          <p class="text-gray-600">Explore premium stores and their top collections.</p>
+        </div>
+        <div class="relative w-full md:w-96">
+          <input 
+            type="text" 
+            placeholder="Search for shops or products..." 
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-custom-yellow transition-all text-sm font-medium"
+          >
+          <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10">
+    <!-- Categories Tabs -->
+    <div class="flex items-center gap-4 overflow-x-auto pb-8 hide-scrollbar">
+      @for (cat of categories(); track cat.id) {
+      <button (click)="filterShops(cat.id)"
+        [class]="'flex-shrink-0 flex items-center gap-3 px-6 py-4 rounded-[1.5rem] font-bold transition-all border-2 ' + 
+                 (selectedCategory() === cat.id ? 'border-custom-yellow bg-white shadow-lg scale-105 ' + cat.color : 'bg-white border-transparent text-gray-500 hover:text-gray-700')">
+        <i [class]="cat.icon"></i>
+        {{ cat.name }}
+      </button>
+      }
+    </div>
+
+    <!-- Shops with Products Sections -->
+    <div class="space-y-16 animate-fade-in">
+      @for (shop of filteredShops(); track shop.id) {
+      <div>
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity" [routerLink]="['/shop', shop.id]">
+            <div class="w-16 h-16 rounded-2xl overflow-hidden shadow-sm border border-gray-100 shrink-0">
+              <img [src]="shop.logo" [alt]="shop.name" class="w-full h-full object-cover">
+            </div>
+            <div>
+              <h2 class="text-2xl font-black text-gray-900">{{ shop.name }}</h2>
+              <div class="flex items-center gap-3 mt-1">
+                <span class="flex items-center text-xs font-bold bg-yellow-50 text-custom-yellow-dark px-2 py-0.5 rounded-md">
+                  <i class="fas fa-star mr-1"></i> {{ shop.rating }}
+                </span>
+                <span class="text-xs text-gray-500 font-medium">
+                  <i class="far fa-clock mr-1"></i> {{ shop.deliveryTime }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <a [routerLink]="['/shop', shop.id]" 
+             class="text-sm font-black text-custom-yellow-dark hover:underline flex items-center gap-2">
+            View All <i class="fas fa-chevron-right text-[10px]"></i>
+          </a>
+        </div>
+
+        <!-- Product Grid Part -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+          @for (prod of shop.products; track prod.id) {
+          <a class="product-card bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline"
+             [routerLink]="['/product', prod.id]">
+            
+            <div class="absolute top-4 left-4 z-10" 
+                 style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              Sale
+            </div>
+
+            <div class="h-28 mb-3 relative group-hover:scale-110 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[9px] font-black uppercase tracking-widest mb-1">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-xs leading-tight group-hover:text-custom-yellow-dark transition-colors">
+                {{ prod.name }}
+              </h3>
+              <p class="text-gray-500 font-bold mb-4 text-[10px]">{{ prod.weight }}</p>
+
+              <div class="mt-auto flex items-center justify-between">
+                <span class="text-sm font-black text-custom-yellow-dark">Rs. {{ prod.price }}</span>
+                <button class="w-8 h-8 rounded-lg bg-custom-yellow text-gray-800 flex items-center justify-center shadow-md hover:bg-yellow-500 transition-colors">
+                  <i class="fas fa-plus text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </div>
+      }
+
+      @if (filteredShops().length === 0) {
+        <div class="text-center py-20 bg-white rounded-[2rem] border border-gray-100">
+          <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300 text-3xl">
+            <i class="fas fa-store-slash"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">No shops found</h3>
+          <p class="text-gray-500 mt-2">Try switching to another category.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

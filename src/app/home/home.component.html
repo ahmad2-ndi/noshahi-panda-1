@@ -1,86 +1,8 @@
-<!-- ========== FIXED HEADER ========== -->
-<div class="fixed top-0 left-0 w-full bg-white shadow-md z-50 md:mt-0"
-  [style.top]="isScrolled() ? '0' : (isDesktop() ? '32px' : '0')">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-    <!-- Header top row -->
-    <header class="flex flex-wrap items-center justify-between gap-3 pb-1" style="transform-style: preserve-3d;">
-      <div class="flex items-center flex-wrap gap-3 sm:gap-6" style="transform-style: preserve-3d;">
-        <span class="text-3xl font-bold text-custom-yellow-dark tracking-tight"
-          style="text-shadow: 0 4px 8px rgba(251,206,7,0.25);">Noshahi panda</span>
-        <div class="relative inline-block" style="transform-style: preserve-3d; z-index: 100;">
-          <div id="locationPill" (click)="toggleCityDropdown($event)"
-            class="flex items-center text-gray-700 text-sm sm:text-base bg-gray-100 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-all cursor-default">
-            <i class="fas fa-map-pin text-custom-yellow mr-2"></i>
-            <span id="locationText" class="font-medium">{{ currentAddress() }}</span>
-            <i class="fas fa-chevron-down ml-2 text-gray-500 text-xs"></i>
-          </div>
-          <!-- dropdown – completely solid white -->
-          <div id="citySearchDropdown" [class.show]="showCityDropdown()"
-            class="border border-gray-200 rounded-xl shadow-xl">
-            <div class="p-3">
-              <div class="relative">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                <input type="text" id="citySearchInput" placeholder="Search Pakistani city..."
-                  (input)="filterCities($event)" (keydown.enter)="selectFirstCity($event)"
-                  (keydown.escape)="showCityDropdown.set(false)"
-                  class="w-full border border-gray-200 rounded-full py-2.5 pl-9 pr-4 text-sm bg-gray-50 focus:ring-2 focus:ring-custom-yellow focus:border-transparent">
-              </div>
-              <div id="suggestionList" class="mt-2 max-h-48 overflow-y-auto divide-y divide-gray-100">
-                @for (city of filteredCities(); track city) {
-                <div
-                  class="suggestion-item px-3 py-2 text-sm text-gray-700 hover:bg-yellow-50 transition cursor-default"
-                  (click)="updateLocation(city)">
-                  {{ city }}
-                </div>
-                } @empty {
-                <div class="px-3 py-2 text-sm text-gray-500">No matching cities</div>
-                }
-              </div>
-              <div class="text-xs text-gray-500 mt-2 px-2">Click on a city to select</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
-        <button type="button" (click)="openSignupModal()"
-          class="trigger-signup-modal text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
-          in</button>
-        <button type="button" (click)="openSignupModal()"
-          class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center gap-1"
-          style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
-          <i class="fas fa-gift"></i> <span class="hidden sm:inline">Sign up for free delivery</span><span
-            class="sm:hidden">Sign up</span>
-        </button>
-        <button class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-colors relative">
-          <i class="fas fa-shopping-bag text-xl"></i>
-          <span
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-        </button>
-        <div class="flex items-center text-gray-700 border-l pl-3 border-gray-300">
-          <i class="fas fa-globe text-gray-500 mr-1"></i>
-          <span class="font-medium">EN</span>
-          <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
-        </div>
-      </div>
-    </header>
-
-    <!-- TABS – no bottom border line -->
-    <div class="flex flex-wrap mt-1 gap-1" id="tabContainer">
-      @for (tab of tabs; track tab.id) {
-      <button class="tab-btn py-2 px-4 font-semibold border-b-2" [class.active-tab]="activeTab() === tab.id"
-        [class.text-custom-yellow-dark]="activeTab() === tab.id" [class.border-custom-yellow]="activeTab() === tab.id"
-        [class.text-gray-500]="activeTab() !== tab.id" [class.border-transparent]="activeTab() !== tab.id"
-        (click)="activeTab.set(tab.id)">
-        <i [class]="tab.icon + ' mr-2'"></i>{{ tab.label }}
-      </button>
-      }
-    </div>
-  </div>
-</div>
+<app-header></app-header>
 
 <!-- ========== MAIN CONTENT ========== -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 main-3d"
-  style="transform-style: preserve-3d; padding-top: 140px;">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-4 md:py-6 main-3d"
+  style="transform-style: preserve-3d; padding-top: 120px; margin: 0 auto;">
 
   <!-- Promo banner (Common) -->
   <div
@@ -89,89 +11,23 @@
       <div class="bg-yellow-100 p-3 rounded-full"
         style="box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 6px rgba(251,206,7,0.2);"><i
           class="fas fa-tag text-custom-yellow-dark text-xl"></i></div>
-      <span id="banner-text-signup-btn" (click)="openSignupModal()"
+      <span id="banner-text-signup-btn" (click)="layout.openSignupModal()"
         class="trigger-signup-modal text-gray-800 font-semibold text-lg cursor-pointer hover:text-custom-yellow-dark transition-colors">✨
         Sign up for free delivery on your first order</span>
     </div>
-    <button id="banner-signup-btn" (click)="openSignupModal()"
+    <button id="banner-signup-btn" (click)="layout.openSignupModal()"
       class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full shadow-md transition flex items-center gap-2"
       style="box-shadow: 0 12px 20px -8px #FBCE07;"><i class="fas fa-pen"></i> Sign up</button>
   </div>
 
   <!-- DELIVERY TAB CONTENT -->
-  <ng-container *ngIf="activeTab() === 'delivery'">
+  <ng-container *ngIf="layout.activeTab() === 'delivery'">
   <!-- TWO COLUMN LAYOUT -->
   <div class="flex flex-col lg:flex-row gap-8 mt-2">
     <!-- LEFT COLUMN (filters, offers, cuisines) -->
-    <aside class="lg:w-1/5 w-full space-y-4 lg:sticky lg:top-36 lg:self-start">
-      <div class="text-lg font-semibold text-gray-800">Filters</div>
-      <div>
-        <div class="text-sm font-medium text-gray-600 mb-2">Sort by</div>
-        <ul class="space-y-1" id="sortOptionsList">
-          @for (option of sortOptions; track option) {
-          <li
-            class="filter-option px-2 py-1.5 rounded-md cursor-pointer hover:bg-yellow-50 text-gray-700 flex items-center justify-between"
-            [class.active]="activeSort() === option" (click)="activeSort.set(option)">
-            <span>{{ option }}</span>
-            <i class="fas fa-check text-custom-yellow-dark active-icon"></i>
-          </li>
-          }
-        </ul>
-      </div>
-      <div>
-        <div class="text-sm font-medium text-gray-600 mb-2">Quick filters</div>
-        <div class="flex flex-wrap gap-2">
-          <button
-            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm flex items-center"
-            [class.bg-yellow-100]="quickFilters().get('ratings')"
-            [class.border-custom-yellow]="quickFilters().get('ratings')"
-            [class.text-custom-yellow-dark]="quickFilters().get('ratings')" (click)="toggleQuickFilter('ratings')">
-            <i class="fas fa-star text-custom-yellow mr-1.5"></i> Ratings 4+</button>
-          <button
-            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm flex items-center"
-            [class.bg-yellow-100]="quickFilters().get('super')"
-            [class.border-custom-yellow]="quickFilters().get('super')"
-            [class.text-custom-yellow-dark]="quickFilters().get('super')" (click)="toggleQuickFilter('super')">
-            <i class="fas fa-crown text-custom-yellow mr-1.5"></i> Super restaurant</button>
-        </div>
-      </div>
-
-
-      <!-- OFFERS -->
-      <div class="mt-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i
-            class="fas fa-tag text-custom-yellow mr-2"></i> Offers</h2>
-        <div class="flex flex-wrap gap-2">
-          @for (offer of offers; track offer) {
-          <span
-            class="chip border border-gray-300 rounded-full px-5 py-2 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm"
-            [class.bg-yellow-100]="quickFilters().get(offer)" [class.border-custom-yellow]="quickFilters().get(offer)"
-            [class.text-custom-yellow-dark]="quickFilters().get(offer)" (click)="toggleQuickFilter(offer)">
-            {{ offer }}
-          </span>
-          }
-        </div>
-      </div>
-
-      <!-- DETAILED CUISINES -->
-      <div class="mt-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i
-            class="fas fa-utensils text-custom-yellow mr-2"></i> Cuisines</h2>
-        <div class="relative mb-4">
-          <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="text" placeholder="Search for cuisine"
-            class="w-full border border-gray-200 rounded-full py-2 pl-8 pr-4 text-sm bg-white shadow-sm focus:ring-2 focus:ring-custom-yellow">
-        </div>
-        <div class="flex flex-wrap gap-2 mb-4">
-          @for (cuisine of sideCuisines; track cuisine) {
-          <span
-            class="chip border border-gray-300 rounded-full px-4 py-1.5 text-sm font-medium text-gray-700 hover:border-custom-yellow hover:bg-yellow-50 bg-white shadow-sm">
-            {{ cuisine }}
-          </span>
-          }
-        </div>
-      </div>
-    </aside>
+    <div class="lg:w-1/5 w-full">
+      <app-sidebar></app-sidebar>
+    </div>
 
     <!-- RIGHT COLUMN -->
     <main class="lg:w-4/5 w-full space-y-6">
@@ -453,7 +309,7 @@
 </ng-container>
 
   <!-- PICKUP TAB CONTENT -->
-  <ng-container *ngIf="activeTab() === 'pickup'">
+  <ng-container *ngIf="layout.activeTab() === 'pickup'">
     <div class="space-y-10 animate-fade-in">
       <!-- Pickup Hero / Search -->
       <div class="relative rounded-3xl overflow-hidden h-64 md:h-80 shadow-2xl group">
@@ -538,7 +394,7 @@
 
           <div class="bg-gradient-to-br from-custom-yellow to-yellow-500 rounded-3xl p-8 shadow-2xl text-gray-900 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 opacity-10 rotate-12">
-              <i class="fas fa-shopping-bag text-[120px]"></i>
+              <i class="fas fa-shopping-cart text-[120px]"></i>
             </div>
             <h4 class="text-2xl font-black mb-6">How it works</h4>
             <div class="space-y-6">
@@ -560,16 +416,408 @@
       </div>
     </div>
   </ng-container>
+   <!-- PANDAMART TAB CONTENT -->
+  <ng-container *ngIf="layout.activeTab() === 'pandamart'">
+    <div class="flex flex-col gap-12 mt-6 animate-fade-in">
+      
+      <!-- Premium Search Header -->
+      <div class="max-w-4xl mx-auto w-full text-center space-y-6">
+        <h1 class="text-4xl md:text-5xl font-black text-gray-800 tracking-tight">Everything you need, <span class="text-custom-yellow-dark">delivered fast</span></h1>
+        <div class="relative group">
+          <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-custom-yellow-dark transition-all text-xl"></i>
+          <input type="text" placeholder="Search from 10,000+ products..." 
+                 class="w-full py-6 pl-16 pr-8 rounded-[2rem] bg-white border-2 border-gray-100 shadow-2xl focus:ring-8 focus:ring-custom-yellow/20 focus:border-custom-yellow/50 transition-all font-bold text-xl placeholder:text-gray-300">
+        </div>
+      </div>
 
-  <!-- OTHER TABS PLACEHOLDERS -->
-  <ng-container *ngIf="['pandamart', 'shops', 'caterers'].includes(activeTab())">
+      <!-- Hero Slider Section -->
+      <div class="relative rounded-[3.5rem] overflow-hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.1)] h-[300px] md:h-[450px] group bg-gray-50">
+        <div class="flex h-full">
+          @for (banner of pandamartBanners; track banner.title) {
+          <div class="min-w-full h-full relative" *ngIf="banner === pandamartBanners[0]">
+            <img [src]="banner.image" class="w-full h-full object-cover" [alt]="banner.title">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent flex flex-col justify-center px-12 md:px-24">
+               <div class="bg-custom-yellow text-gray-900 w-fit px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 border border-yellow-400">Limited Time Offer</div>
+               <h2 class="text-4xl md:text-6xl font-black text-white max-w-lg leading-tight mb-8 drop-shadow-2xl">
+                 {{ banner.title }}
+               </h2>
+               <button class="bg-white text-gray-900 w-fit px-10 py-4 rounded-2xl font-black shadow-2xl hover:bg-custom-yellow hover:text-gray-900 hover:-translate-y-1 transition-all active:scale-95 text-lg">
+                 Shop Now <i class="fas fa-arrow-right ml-2 text-sm"></i>
+               </button>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="absolute bottom-10 left-12 flex gap-3">
+          <div class="w-12 h-2 rounded-full bg-white transition-all shadow-md"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 hover:bg-white/60 transition-all cursor-pointer"></div>
+          <div class="w-2 h-2 rounded-full bg-white/40 hover:bg-white/60 transition-all cursor-pointer"></div>
+        </div>
+      </div>
+
+      <!-- Shop by Category -->
+      <section>
+        <div class="flex items-center justify-between mb-10">
+          <h2 class="text-3xl font-black text-gray-800">Shop by Category</h2>
+          <button [routerLink]="'/pandamart-offers'" class="text-custom-yellow-dark font-black text-lg hover:underline flex items-center gap-2 group">
+            View All <i class="fas fa-chevron-right text-sm group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+        <div class="flex gap-6 md:gap-10 overflow-x-auto pb-6 hide-scrollbar">
+          @for (cat of pandamartCategories; track cat.name) {
+          <div class="flex flex-col items-center gap-4 shrink-0 cursor-pointer group"
+               [routerLink]="cat.name === 'Offers' ? '/pandamart-offers' : null">
+            <div class="category-icon-container bg-white shadow-lg border border-gray-50 p-2 hover:border-custom-yellow/50 hover:shadow-2xl hover:-translate-y-2"
+                 [style.background-color]="cat.color">
+              @if (cat.icon) {
+                <i [class]="cat.icon" class="text-3xl md:text-4xl text-custom-yellow-dark"></i>
+              } @else {
+                <img [src]="cat.image" class="w-14 h-14 md:w-20 md:h-20 object-contain rounded-2xl">
+              }
+            </div>
+            <span class="text-sm md:text-base font-black text-gray-700 group-hover:text-custom-yellow-dark transition-colors text-center w-28 leading-tight">
+              {{ cat.name }}
+            </span>
+          </div>
+          }
+        </div>
+      </section>
+
+      <!-- Shop by Brand -->
+      <section class="bg-gray-50 -mx-8 px-8 py-16 rounded-[3rem]">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-3xl font-black text-gray-800 mb-10">Trusted Brands</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            @for (brand of pandamartBrands; track brand.name) {
+            <div class="brand-card bg-white p-8 rounded-3xl flex items-center justify-center shadow-sm cursor-pointer grayscale hover:grayscale-0">
+               <img [src]="brand.image" class="h-12 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity" [alt]="brand.name">
+            </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- SALE / EXCLUSIVE DEALS -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 text-2xl shadow-inner">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">Exclusive Deals</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Hurry up! Offers end soon.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'exclusive' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of exclusiveDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <!-- Discount Tag -->
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+
+            <!-- Product Image -->
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+
+            <!-- Product Info -->
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">
+                {{ prod.name }}
+              </h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+
+      <!-- FRESHLY PICKED -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-500 text-2xl shadow-inner">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">Freshly Picked For You</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Farm fresh produce delivered directly to you.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'fresh' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of freshDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">{{ prod.name }}</h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+
+      <!-- PANTRY ESSENTIALS -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 text-2xl shadow-inner">
+              <i class="fas fa-shopping-basket"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">Pantry Essentials</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Stock up your kitchen with quality ingredients.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'pantry' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of pantryDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">{{ prod.name }}</h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+
+      <!-- BAKERY -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-500 text-2xl shadow-inner">
+              <i class="fas fa-bread-slice"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">Fresh Bakery</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Oven-fresh breads, cakes, and treats.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'bakery' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of bakeryDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">{{ prod.name }}</h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+
+      <!-- SNACKS & BEVERAGES -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 text-2xl shadow-inner">
+              <i class="fas fa-cookie-bite"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">Snacks & Beverages</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Satisfy your cravings instantly.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'snacks' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of snackDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">{{ prod.name }}</h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+      <!-- ALL PRODUCTS -->
+      <section>
+        <div class="flex items-center justify-between mb-12">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-500 text-2xl shadow-inner">
+              <i class="fas fa-th-large"></i>
+            </div>
+            <div>
+              <h2 class="text-3xl font-black text-gray-800 leading-none">All Products</h2>
+              <p class="text-gray-400 font-bold text-sm mt-1">Browse our complete catalogue of items.</p>
+            </div>
+          </div>
+          <button [routerLink]="['/pandamart-offers']" [queryParams]="{ category: 'all' }" class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-2xl font-black transition-all shadow-md">View All</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 lg:gap-4">
+          @for (prod of allDeals; track prod.id) {
+          <a class="product-card bg-white rounded-2xl p-2.5 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline block" [routerLink]="['/product', prod.id]" (click)="openProductDetail(prod.id); $event.preventDefault();">
+            <div class="absolute top-4 left-4 z-10 discount-badge" style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              {{ prod.discount }}
+            </div>
+            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors z-10 opacity-0 group-hover:opacity-100">
+              <i class="far fa-heart text-xs"></i>
+            </button>
+            <div class="h-24 mb-3 relative group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[8px] font-black uppercase tracking-widest mb-0.5">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-[11px] leading-tight hover:text-custom-yellow-dark transition-colors h-8">{{ prod.name }}</h3>
+              <p class="text-gray-500 font-bold mb-3 text-[10px]">{{ prod.weight }}</p>
+              <div class="mt-auto flex items-center justify-between">
+                <div class="flex flex-col">
+                  <span class="text-gray-300 text-[9px] line-through font-bold">Rs. {{ prod.originalPrice }}</span>
+                  <span class="text-base font-black" style="color: #EAB308;">Rs. {{ prod.price }}</span>
+                </div>
+                <button class="add-btn w-8 h-8 rounded-lg flex items-center justify-center shadow-md" style="background: #FBCE07; color: #1f2937; transform: translateZ(15px);">
+                  <i class="fas fa-plus text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+          }
+        </div>
+      </section>
+
+      <!-- Freshness Guarantee Banner -->
+      <div class="bg-gradient-to-br from-[#FBCE07] to-[#EAB308] rounded-[3.5rem] p-8 md:p-16 text-gray-900 overflow-hidden relative shadow-2xl">
+         <div class="absolute -right-20 -top-20 opacity-10 rotate-12 scale-150">
+            <i class="fas fa-carrot text-[200px] text-gray-900"></i>
+         </div>
+         <div class="relative z-10 max-w-2xl">
+            <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">Freshness <br>Guaranteed!</h2>
+            <p class="text-gray-800 text-lg font-bold mb-10">We source directly from farms to ensure you get the best quality fruits, vegetables, and dairy products every single day.</p>
+            <div class="flex flex-wrap gap-8">
+               <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-xl">
+                    <i class="fas fa-certificate"></i>
+                  </div>
+                  <span class="font-black">Premium Quality</span>
+               </div>
+               <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-xl">
+                    <i class="fas fa-shipping-fast"></i>
+                  </div>
+                  <span class="font-black">Fast Delivery</span>
+               </div>
+            </div>
+         </div>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- OTHER TABS (Shops, Caterers) -->
+  <ng-container *ngIf="['shops', 'caterers'].includes(layout.activeTab())">
     <div class="min-h-[60vh] flex flex-col items-center justify-center text-center animate-fade-in">
       <div class="w-32 h-32 bg-yellow-50 rounded-full flex items-center justify-center text-custom-yellow text-5xl mb-6 shadow-2xl animate-pulse">
-        <i [class]="tabs.find(t => t.id === activeTab())?.icon"></i>
+        <i [class]="layout.tabs.find(t => t.id === layout.activeTab())?.icon"></i>
       </div>
-      <h2 class="text-4xl font-black text-gray-800 mb-4 capitalize">{{ activeTab() }} Coming Soon</h2>
-      <p class="text-gray-500 max-w-md mx-auto text-lg">We are working hard to bring the best {{ activeTab() }} experience to your city. Stay tuned for exciting updates!</p>
-      <button (click)="activeTab.set('delivery')" class="mt-10 px-8 py-4 bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold rounded-2xl shadow-xl transition-all active:scale-95">
+      <h2 class="text-4xl font-black text-gray-800 mb-4 capitalize">{{ layout.activeTab() }} Coming Soon</h2>
+      <p class="text-gray-500 max-w-md mx-auto text-lg">We are working hard to bring the best {{ layout.activeTab() }} experience to your city. Stay tuned for exciting updates!</p>
+      <button (click)="layout.activeTab.set('delivery')" class="mt-10 px-8 py-4 bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold rounded-2xl shadow-xl transition-all active:scale-95">
         Back to Delivery
       </button>
     </div>
@@ -577,25 +825,6 @@
 
   <!-- COMMON BOTTOM SECTIONS -->
   <div class="animate-fade-in mt-20">
-    <!-- CITIES GRID SECTION -->
-    <div class="mt-24">
-      <h2 class="text-3xl font-bold text-gray-800 mb-8 px-4 md:px-0">Find us in these cities and many more!</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-0">
-        @for (city of pakistaniCitiesGrid; track city.name) {
-        <div
-          class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all">
-          <img [src]="city.image" [alt]="city.name"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-          <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
-          <div class="absolute bottom-4 left-4">
-            <span class="bg-white/90 backdrop-blur-sm text-gray-800 font-bold px-4 py-2 rounded-xl shadow-lg">
-              {{ city.name }}
-            </span>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
 
     <!-- JOIN US / PARTNER SECTION -->
     <div class="mt-24 bg-gray-50 -mx-4 px-4 sm:-mx-8 sm:px-8 py-16 rounded-3xl">
@@ -630,265 +859,4 @@
   </div>
 </div>
 
-  <!-- ========== NEW FOOTER SECTION ========== -->
-  <footer class="mt-20 relative">
-    <!-- Footer Background Wrapper -->
-    <div class="footer-dark text-white pt-20 pb-12">
-      <!-- Newsletter Banner (Moved inside for consistent context) -->
-      <div class="max-w-7xl mx-auto px-4 mb-20">
-        <div
-          class="bg-white rounded-[2rem] p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8 overflow-hidden border-4 border-white/10">
-          <div class="md:w-1/3 w-full h-56 relative overflow-hidden rounded-2xl group">
-            <img src="https://images.unsplash.com/photo-1544124499-58912cbddaad?auto=format&fit=crop&q=80&w=600"
-              alt="Food Newsletter"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
-              <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center text-gray-800 shadow-lg">
-                <i class="fas fa-play ml-1"></i>
-              </div>
-            </div>
-          </div>
-          <div class="md:w-2/3 w-full text-left">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="text-custom-yellow font-bold uppercase tracking-widest text-xs">Newsletters</span>
-              <div class="h-[1px] w-12 bg-custom-yellow/30"></div>
-            </div>
-            <h3 class="text-2xl md:text-3xl font-black text-gray-800 mb-4 leading-tight relative inline-block">
-              Get Every Single Menu Notification
-              <span class="absolute -bottom-2 left-0 w-12 h-1 bg-custom-yellow rounded-full"></span>
-            </h3>
-            <div class="flex flex-wrap gap-4 mb-8">
-              @for (update of ['Regular', 'Weekly', 'Monthly']; track update) {
-              <div class="flex items-center gap-2">
-                <div
-                  class="w-5 h-5 bg-gray-800 rounded-full flex items-center justify-center text-[10px] text-custom-yellow shadow-md">
-                  <i class="fas fa-check"></i>
-                </div>
-                <span class="text-gray-600 font-semibold text-sm">{{ update }} Updates</span>
-              </div>
-              }
-            </div>
-            <div class="relative max-w-lg">
-              <div
-                class="flex items-center bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden shadow-inner p-1">
-                <i class="far fa-envelope text-gray-400 ml-4 shrink-0"></i>
-                <input type="email" placeholder="Enter your email"
-                  class="w-full py-3 px-4 bg-transparent focus:outline-none text-gray-700 font-medium">
-                <button
-                  class="bg-custom-yellow hover:bg-yellow-400 text-gray-900 font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-95 shrink-0 flex items-center gap-2">
-                  Subscribe <i class="fas fa-paper-plane text-xs"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEO / INFORMATIONAL BLOCKS -->
-      <div class="max-w-7xl mx-auto px-4 mb-24 pb-20">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 text-sm text-gray-400 leading-relaxed text-left">
-          <div class="space-y-6">
-            <h3 class="text-2xl font-bold text-white tracking-tight">Food delivery in Islamabad</h3>
-            <p>Perhaps you are a die-hard fan of local delicacies prepared in a traditional way. Angeethi, Andaaz,
-              Al-Nakheel Lebanese Cuisine, and Islamabad Grill are a few of the excellent places you can consider for
-              authentic Pakistani food prepared just like at home.</p>
-            <p>Looking for the best pizza places in Islamabad? Want to treat your friends to the finest sandwiches in
-              the city? Noshahi Panda makes it easy to find and order exactly what you're craving with fast delivery and
-              great deals.</p>
-          </div>
-          <div class="space-y-6">
-            <h3 class="text-2xl font-bold text-white tracking-tight">Famous restaurants for online delivery</h3>
-            <p>With Noshahi Panda, you have access to a wide range of restaurants catering to every taste and occasion.
-              From the spicy biryani of Savour Foods to the international flavours of KFC and Subway, our platform
-              brings the best of the city to your doorstep.</p>
-            <p>Our dedicated delivery fleet ensures that your food reaches you hot and fresh, whether it's a quick lunch
-              at the office or a late-night craving at home. Enjoy the convenience of online food ordering with the best
-              deals.</p>
-          </div>
-        </div>
-
-        <!-- FAQ INGRID SECTION -->
-        <div class="mt-20">
-          <h3 class="text-2xl font-bold text-white mb-10 text-center relative inline-block mx-auto">
-            Frequently Asked Questions
-            <span class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-white rounded-full"></span>
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 text-left">
-            <div class="group">
-              <h4 class="font-bold text-custom-yellow mb-2 flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-custom-yellow group-hover:scale-150 transition-transform"></span>
-                How can I get noshahi panda delivery?
-              </h4>
-              <p class="text-sm text-gray-400 border-l border-gray-800 ml-1 pl-4">Simply enter your address, choose a
-                restaurant or shop, and place your order. We handle the rest!</p>
-            </div>
-            <div class="group">
-              <h4 class="font-bold text-custom-yellow mb-2 flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-custom-yellow group-hover:scale-150 transition-transform"></span>
-                Which restaurants have free delivery?
-              </h4>
-              <p class="text-sm text-gray-400 border-l border-gray-800 ml-1 pl-4">Many of our partners offer free
-                delivery. Look for the "Free delivery" badge on restaurant cards.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Footer Body -->
-      <div class="max-w-7xl mx-auto px-4 pb-20">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
-          <!-- Brand Column -->
-          <div class="space-y-6">
-            <div class="text-3xl font-black text-custom-yellow tracking-tighter">Noshahi panda</div>
-            <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
-              Bringing the flavors of Pakistan to your doorstep with speed and care. Your favorite food, just a click
-              away.
-            </p>
-            <div class="flex gap-4">
-              <a href="#" class="social-icon-circle"><i class="fab fa-facebook-f text-sm"></i></a>
-              <a href="#" class="social-icon-circle"><i class="fab fa-instagram text-sm"></i></a>
-              <a href="#" class="social-icon-circle"><i class="fab fa-twitter text-sm"></i></a>
-            </div>
-          </div>
-
-          <!-- Links Columns -->
-          @for (column of footerColumns; track column.title) {
-          <div>
-            <h4 class="text-lg font-bold mb-8 relative text-white uppercase tracking-wider">
-              {{ column.title }}
-              <span class="absolute -bottom-3 left-0 w-8 h-1 bg-custom-yellow rounded-full"></span>
-            </h4>
-            <ul class="space-y-4">
-              @for (link of column.links; track link) {
-              <li>
-                <a href="#" class="footer-link-v2 group">
-                  <i
-                    class="fas fa-chevron-right text-[10px] text-custom-yellow opacity-0 group-hover:opacity-100 transition-all -ml-2 group-hover:ml-0"></i>
-                  <span>{{ link }}</span>
-                </a>
-              </li>
-              }
-            </ul>
-          </div>
-          }
-
-          <!-- Contact & Download -->
-          <div class="space-y-10">
-            <div>
-              <h4 class="text-lg font-bold mb-8 relative text-white uppercase tracking-wider">
-                Contact Us
-                <span class="absolute -bottom-3 left-0 w-8 h-1 bg-custom-yellow rounded-full"></span>
-              </h4>
-              <div class="space-y-4">
-                <div class="flex items-center gap-4 text-sm text-gray-400 font-medium group whitespace-nowrap">
-                  <i class="fas fa-phone-alt text-custom-yellow w-5 shrink-0"></i>
-                  <span>+44 (0) 9865 124 765</span>
-                </div>
-                <div class="flex items-center gap-4 text-sm text-gray-400 font-medium group">
-                  <i class="far fa-envelope text-custom-yellow w-5 shrink-0"></i>
-                  <span class="truncate">info@yourdomain.com</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="space-y-4">
-              <a href="#" class="footer-app-btn group">
-                <i class="fab fa-google-play text-2xl"></i>
-                <div class="flex flex-col">
-                  <span class="text-[9px] text-gray-500 font-black uppercase leading-none mb-1">Available on</span>
-                  <span
-                    class="text-sm font-bold text-white group-hover:text-custom-yellow transition-colors leading-none">Google
-                    Play</span>
-                </div>
-              </a>
-              <a href="#" class="footer-app-btn group">
-                <i class="fab fa-apple text-2xl"></i>
-                <div class="flex flex-col">
-                  <span class="text-[9px] text-gray-500 font-black uppercase leading-none mb-1">Download on</span>
-                  <span
-                    class="text-sm font-bold text-white group-hover:text-custom-yellow transition-colors leading-none">App
-                    Store</span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Copyright Bar -->
-    <div class="footer-dark border-t border-gray-800 py-10 pb-24 md:pb-10">
-      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div class="text-gray-500 text-sm font-medium order-2 md:order-1">
-          © 2024 <span class="text-custom-yellow font-bold mx-1">Noshahi Panda</span> • All rights reserved.
-        </div>
-        <div class="flex flex-col md:flex-row items-center gap-6 order-1 md:order-2">
-          <span class="text-gray-500 text-xs font-black uppercase tracking-[0.2em]">Safe Payments</span>
-          <div class="flex flex-wrap justify-center gap-3">
-            @for (payment of ['PayPal', 'MasterCard', 'VISA', 'Discover', 'Amex']; track payment) {
-            <div
-              class="bg-gray-800/50 border border-gray-700 px-4 py-2 rounded-lg grayscale hover:grayscale-0 transition-all cursor-default">
-              <span class="text-[10px] font-black tracking-widest uppercase"
-                [class.text-blue-400]="payment === 'PayPal'" [class.text-red-400]="payment === 'MasterCard'"
-                [class.text-blue-300]="payment === 'VISA'" [class.text-orange-300]="payment === 'Discover'"
-                [class.text-green-400]="payment === 'Amex'">
-                {{ payment }}
-              </span>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-<!-- STICKY BOTTOM BANNER -->
-<div *ngIf="showStickyBanner()"
-  class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[99] p-4 animate-slide-up">
-  <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-    <div class="flex items-center gap-4">
-      <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-custom-yellow text-2xl">
-        <i class="fas fa-gift"></i>
-      </div>
-      <div>
-        <h4 class="font-bold text-gray-800 text-sm md:text-base">Get free delivery on your first order!</h4>
-        <p class="text-gray-500 text-xs md:text-sm">Sign up now and enjoy special discounts.</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-3">
-      <button (click)="openSignupModal()"
-        class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold px-6 py-2.5 rounded-full shadow-md transition whitespace-nowrap text-sm">
-        Sign up now
-      </button>
-      <button (click)="showStickyBanner.set(false)" class="text-gray-400 hover:text-gray-600 p-2">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SIGNUP MODAL HTML ========== -->
-<div *ngIf="showSignupModal()" id="signupModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 active">
-  <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl relative p-8">
-    <button id="closeModal" (click)="showSignupModal.set(false)"
-      class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 transition">
-      <i class="fas fa-times text-xl"></i>
-    </button>
-    <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome!</h2>
-    <p class="text-gray-600 mb-8">Sign up or log in to continue</p>
-    <button class="social-btn btn-facebook">Continue with Facebook</button>
-    <button class="social-btn btn-google">
-      <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" class="w-5 h-5 mr-3">
-      Continue with Google
-    </button>
-    <button class="social-btn btn-apple"><i class="fab fa-apple text-xl mr-3"></i>Continue with Apple</button>
-    <div class="divider-text">or</div>
-    <button class="social-btn btn-login mb-4">Log in</button>
-    <button class="social-btn btn-signup-outline">Sign up</button>
-    <p class="text-xs text-center text-gray-500 mt-8 leading-relaxed">
-      By signing up, you agree to our <a href="#" class="text-custom-yellow-dark hover:underline">Terms and
-        Conditions</a> and
-      <a href="#" class="text-custom-yellow-dark hover:underline">Privacy Policy</a>.
-    </p>
-  </div>
-</div>
+<app-footer></app-footer>

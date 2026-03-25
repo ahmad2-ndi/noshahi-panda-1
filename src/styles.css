@@ -1,1 +1,170 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css - GLOBAL STYLES */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+}
+
+/* ===== CUSTOM YELLOW #FBCE07 ===== */
+:root {
+  --yellow: #FBCE07;
+  --yellow-dark: #EAB308;
+}
+
+/* 3D transforms */
+.main-3d {
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+/* 3D card effect */
+.restaurant-card,
+.deal-card,
+.cuisine-card,
+.product-card {
+  transform: translateY(0) rotateX(0deg) rotateY(0deg) translateZ(0);
+  box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease, border-color 0.2s;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.restaurant-card:hover,
+.deal-card:hover,
+.cuisine-card:hover,
+.product-card:hover {
+  transform: translateY(-12px) rotateX(5deg) rotateY(2deg) translateZ(15px);
+  box-shadow: 0 35px 40px -15px rgba(251, 206, 7, 0.35), 0 0 0 1px rgba(251, 206, 7, 0.3);
+}
+
+.restaurant-card img,
+.cuisine-img-container img,
+.product-card img {
+  transition: transform 0.2s ease;
+  transform: translateZ(0);
+}
+
+.cuisine-img-container {
+  width: 100%;
+  height: 120px;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .cuisine-card {
+    width: 100px;
+  }
+
+  .cuisine-img-container {
+    height: 90px !important;
+  }
+}
+
+.restaurant-card:hover img,
+.cuisine-card:hover .cuisine-img-container img,
+.product-card:hover img {
+  transform: scale(1.05) translateZ(20px);
+}
+
+/* ===== GLOBAL HOVER ===== */
+.tab-btn,
+.chip,
+.bg-custom-yellow,
+.filter-option,
+.social-icon-circle,
+a[href],
+button {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s;
+  transform: translateY(0) translateZ(0);
+  will-change: transform;
+}
+
+.tab-btn:hover,
+.chip:hover,
+.bg-custom-yellow:hover,
+.filter-option:hover,
+.social-icon-circle:hover,
+a[href]:hover,
+button:hover {
+  transform: translateY(-3px) translateZ(5px) !important;
+  box-shadow: 0 12px 18px -8px rgba(251, 206, 7, 0.35), 0 0 0 1px rgba(251, 206, 7, 0.2) !important;
+}
+
+/* utilities */
+.bg-custom-yellow { background-color: #FBCE07; }
+.text-custom-yellow { color: #FBCE07; }
+.text-custom-yellow-dark { color: #EAB308; }
+.border-custom-yellow { border-color: #FBCE07; }
+
+/* Restored Footer Styles */
+.footer-dark {
+  background-color: #262626 !important;
+}
+
+.footer-link {
+  color: #9ca3af;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 6px 12px;
+  margin-left: -12px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.footer-link:hover,
+.footer-link:active {
+  color: #FBCE07 !important;
+  background-color: rgba(251, 206, 7, 0.15);
+  transform: translateX(8px);
+}
+
+.social-icon-circle {
+  width: 32px;
+  height: 32px;
+  background: white;
+  color: #262626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.social-icon-circle:hover {
+  background: #FE9614;
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Slider utilities */
+.slider-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1.25rem;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

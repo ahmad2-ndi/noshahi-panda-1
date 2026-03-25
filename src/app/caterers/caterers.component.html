@@ -1,0 +1,120 @@
+<app-header></app-header>
+
+<div class="caterers-container min-h-screen bg-gray-50 pt-[104px]">
+  
+  <!-- Premium Hero Section -->
+  <div class="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
+    <img src="https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1920" alt="Premium Catering" class="absolute inset-0 w-full h-full object-cover z-0 filter blur-[2px] scale-105">
+    
+    <div class="relative z-20 text-center px-4 max-w-4xl mx-auto animate-fade-in-up">
+      <div class="inline-block mb-4 px-6 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+        <span class="text-custom-yellow font-bold uppercase tracking-[0.3em] text-sm">Luxury Dining</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-lg leading-tight">
+        Premium <span class="text-custom-yellow">Catering</span> Services
+      </h1>
+      <p class="text-lg md:text-xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
+        Elevate your events with world-class chefs, exquisite menus, and unforgettable dining experiences tailored just for you.
+      </p>
+    </div>
+
+    <!-- Decorative Bottom Wave -->
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20">
+      <svg class="relative block w-full h-[50px] text-gray-50" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.71,109.85,137.93,118.05,214.34,103.51Z" fill="currentColor"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Category Filters -->
+    <div class="flex items-center justify-center gap-3 sm:gap-6 flex-wrap mb-16 animate-fade-in-up" style="animation-delay: 0.1s;">
+      @for (cat of categories; track cat.name) {
+        <button class="category-pill flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm md:text-base border-2 transition-all duration-300"
+                [class.active]="activeCategory() === cat.name"
+                [class.inactive]="activeCategory() !== cat.name"
+                (click)="setCategory(cat.name)">
+          <i [class]="cat.icon"></i>
+          {{ cat.name }}
+        </button>
+      }
+    </div>
+
+    <!-- Caterers Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      @for (caterer of filteredCaterers(); track caterer.id) {
+        <!-- Premium Caterer Card -->
+        <div class="caterer-card group rounded-[2.5rem] bg-white shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden relative transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_rgba(251,206,7,0.15)] flex flex-col h-full animate-fade-in-up">
+          
+          <!-- Image Header -->
+          <div class="relative h-60 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+            <img [src]="caterer.image" [alt]="caterer.name" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            
+            <!-- Floating Category Badge -->
+            <div class="absolute top-5 right-5 z-20 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+              {{ caterer.category }}
+            </div>
+            
+            <!-- Logo Overlap -->
+            <div class="absolute -bottom-8 left-8 z-20 w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center p-1 border-4 border-white overflow-hidden">
+              <img [src]="caterer.logo" [alt]="caterer.name + ' logo'" class="w-full h-full object-cover rounded-xl">
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="p-8 pt-12 flex flex-col flex-grow relative">
+            
+            <!-- Rating -->
+            <div class="absolute top-5 right-8 flex items-center gap-1.5 bg-yellow-50 px-3 py-1 rounded-full border border-yellow-100">
+              <i class="fas fa-star text-custom-yellow text-xs"></i>
+              <span class="font-extrabold text-gray-800 text-sm">{{ caterer.rating }}</span>
+            </div>
+
+            <!-- Title & Description -->
+            <h2 class="text-2xl font-black text-gray-800 mb-3 group-hover:text-custom-yellow transition-colors">{{ caterer.name }}</h2>
+            <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow">{{ caterer.description }}</p>
+
+            <!-- Stats Row -->
+            <div class="flex items-center justify-between py-5 border-y border-gray-100 mb-6 bg-gray-50/50 rounded-2xl px-4">
+              <div class="flex flex-col items-center">
+                <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Min. Order</span>
+                <div class="flex items-center gap-1.5">
+                  <i class="fas fa-users text-custom-yellow"></i>
+                  <span class="font-black text-gray-800">{{ caterer.minOrder }}<span class="text-xs font-medium text-gray-500 ml-1">Pax</span></span>
+                </div>
+              </div>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="flex flex-col items-center">
+                <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Starting From</span>
+                <div class="flex items-center gap-1.5">
+                  <i class="fas fa-tags text-custom-yellow"></i>
+                  <span class="font-black text-gray-800">{{ caterer.price }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-2xl transition-all duration-300 relative overflow-hidden group/btn shadow-lg">
+              <span class="relative z-10 flex items-center justify-center gap-2">
+                View Menus
+                <i class="fas fa-arrow-right transition-transform group-hover/btn:translate-x-1"></i>
+              </span>
+              <div class="absolute inset-0 bg-custom-yellow transform scale-x-0 origin-left transition-transform duration-500 ease-out group-hover/btn:scale-x-100 z-0"></div>
+              <span class="relative z-10 flex items-center justify-center gap-2 absolute inset-0 opacity-0 group-hover/btn:opacity-100 text-gray-900 transition-opacity duration-300 delay-100">
+                View Menus
+                <i class="fas fa-arrow-right"></i>
+              </span>
+            </button>
+            
+          </div>
+        </div>
+      }
+    </div>
+    
+  </div>
+</div>
+
+<app-footer></app-footer>

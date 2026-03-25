@@ -1,0 +1,80 @@
+<app-header></app-header>
+
+<div class="shop-detail-container bg-[#f7f7f7] min-h-screen pb-20">
+  @if (shop()) {
+    <!-- Shop Hero Header -->
+    <header class="bg-white border-b border-gray-100 pt-32 pb-12">
+      <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
+        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 font-medium">
+          <a routerLink="/shops" class="hover:text-custom-yellow transition-colors">Shops</a>
+          <i class="fas fa-chevron-right text-[10px]"></i>
+          <span class="text-gray-900">{{ shop().name }}</span>
+        </nav>
+
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+          <div class="w-32 h-32 rounded-3xl overflow-hidden shadow-lg border-4 border-white shrink-0">
+            <img [src]="shop().logo" [alt]="shop().name" class="w-full h-full object-cover">
+          </div>
+          <div class="text-center md:text-left">
+            <h1 class="text-4xl font-black text-gray-900 mb-2">{{ shop().name }}</h1>
+            <div class="flex items-center justify-center md:justify-start gap-4 mt-2">
+              <span class="flex items-center text-sm font-bold bg-yellow-50 text-custom-yellow-dark px-3 py-1 rounded-full">
+                <i class="fas fa-star mr-1"></i> {{ shop().rating }} Rating
+              </span>
+              <span class="text-sm text-gray-500 font-bold bg-gray-100 px-3 py-1 rounded-full">
+                <i class="far fa-clock mr-1"></i> {{ shop().deliveryTime }} Delivery
+              </span>
+            </div>
+            <p class="text-gray-600 mt-4 max-w-lg">Welcome to <strong>{{ shop().name }}</strong>. We offer the best {{ shop().category }} items in town with lightning fast delivery.</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10">
+      <!-- Product Grid -->
+      <h2 class="text-2xl font-black text-gray-900 mb-8">All Products</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        @for (prod of shop().products; track prod.id) {
+          <a class="product-card bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col relative overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer no-underline"
+             [routerLink]="['/product', prod.id]">
+            
+            <div class="absolute top-4 left-4 z-10" 
+                 style="background: #FBCE07; color: #1f2937; font-weight: 900; box-shadow: 0 4px 10px rgba(251, 206, 7, 0.4); font-size: 10px; padding: 3px 8px; border-radius: 6px;">
+              New
+            </div>
+
+            <div class="h-32 mb-4 relative group-hover:scale-110 transition-transform duration-500 flex items-center justify-center">
+              <img [src]="prod.image" [alt]="prod.name" class="max-h-full object-contain">
+            </div>
+
+            <div class="flex flex-col flex-grow">
+              <p class="text-gray-400 text-[9px] font-black uppercase tracking-widest mb-1">{{ prod.brand }}</p>
+              <h3 class="font-black text-gray-800 mb-1.5 line-clamp-2 text-xs leading-tight group-hover:text-custom-yellow-dark transition-colors">
+                {{ prod.name }}
+              </h3>
+              <p class="text-gray-500 font-bold mb-4 text-[10px]">{{ prod.weight }}</p>
+
+              <div class="mt-auto flex items-center justify-between">
+                <span class="text-sm font-black text-custom-yellow-dark">Rs. {{ prod.price }}</span>
+                <button class="w-8 h-8 rounded-lg bg-custom-yellow text-gray-800 flex items-center justify-center shadow-md hover:bg-yellow-500 transition-colors">
+                  <i class="fas fa-plus text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Loading/Error State -->
+    <div class="min-h-screen flex items-center justify-center pt-32">
+      <div class="text-center">
+        <div class="w-20 h-20 border-4 border-custom-yellow border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <h2 class="text-2xl font-black text-gray-800">Loading Shop...</h2>
+      </div>
+    </div>
+  }
+</div>
+
+<app-footer></app-footer>

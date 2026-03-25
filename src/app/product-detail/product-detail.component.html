@@ -1,0 +1,121 @@
+<app-header></app-header>
+
+<div class="product-detail-container">
+  <div class="content-wrapper">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs">
+      <a routerLink="/">Home</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <a [routerLink]="['/pandamart-offers']" [queryParams]="{category: product()?.category}">{{ product()?.category | titlecase }}</a>
+      <span class="separator"><i class="fas fa-chevron-right"></i></span>
+      <span class="current">{{ product()?.name }}</span>
+    </nav>
+
+    <div class="main-content" *ngIf="product() as p; else loading">
+      <div class="product-grid">
+        <!-- Left: Image Gallery -->
+        <div class="image-section">
+          <div class="main-image-card">
+            <span class="discount-badge" *ngIf="p.discount">{{ p.discount }}</span>
+            <img [src]="p.image" [alt]="p.name" class="main-image">
+          </div>
+          <div class="image-thumbnails">
+            <div class="thumb active"><img [src]="p.image" [alt]="p.name"></div>
+            <!-- Placeholders for more images if we had them -->
+            <div class="thumb" *ngFor="let i of [1,2,3]"><img [src]="p.image" [alt]="p.name" style="opacity: 0.5;"></div>
+          </div>
+        </div>
+
+        <!-- Right: Product Info -->
+        <div class="info-section">
+          <div class="brand-badge">{{ p.brand }}</div>
+          <h1 class="product-title">{{ p.name }}</h1>
+          <p class="product-weight">{{ p.weight }}</p>
+
+          <div class="rating-row">
+            <div class="stars">
+              <i class="fas fa-star" *ngFor="let i of [1,2,3,4,5]"></i>
+            </div>
+            <span class="rating-text">4.8 (120 reviews)</span>
+          </div>
+
+          <div class="price-container">
+            <div class="current-price">Rs. {{ p.price }}</div>
+            <div class="original-price" *ngIf="p.originalPrice">Rs. {{ p.originalPrice }}</div>
+            <div class="save-amount" *ngIf="p.originalPrice">Save Rs. {{ p.originalPrice - p.price }}</div>
+          </div>
+
+          <div class="purchase-actions">
+            <div class="quantity-selector">
+              <button (click)="decrementQuantity()" [disabled]="quantity() <= 1">
+                <i class="fas fa-minus"></i>
+              </button>
+              <span class="qty">{{ quantity() }}</span>
+              <button (click)="incrementQuantity()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <button class="add-to-cart-btn" (click)="addToCart()">
+              <i class="fas fa-shopping-cart"></i>
+              Add to Cart
+            </button>
+            <button class="buy-now-btn" (click)="buyNow()">
+              <i class="fas fa-bolt"></i>
+              Buy Now
+            </button>
+          </div>
+
+          <div class="additional-info">
+            <div class="info-item">
+              <i class="fas fa-truck"></i>
+              <div class="text">
+                <strong>Fast Delivery</strong>
+                <span>Estimated 15-20 mins</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-shield-alt"></i>
+              <div class="text">
+                <strong>Noshahi Guarantee</strong>
+                <span>100% authentic products</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="description-section">
+            <h3>About this product</h3>
+            <p>{{ p.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <section class="related-section" *ngIf="relatedProducts().length > 0">
+        <h2 class="section-title">Related Products</h2>
+        <div class="related-grid">
+          <div class="product-card" *ngFor="let item of relatedProducts()" [routerLink]="['/product', item.id]">
+            <div class="card-image">
+              <img [src]="item.image" [alt]="item.name">
+              <span class="card-discount" *ngIf="item.discount">{{ item.discount }}</span>
+            </div>
+            <div class="card-content">
+              <div class="item-price">Rs. {{ item.price }}</div>
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-weight">{{ item.weight }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Loading State -->
+    <ng-template #loading>
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading product details...</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<app-footer></app-footer>

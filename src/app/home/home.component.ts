@@ -1,78 +1,48 @@
-import { Component, signal, computed } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { Component, inject, computed } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { LayoutService } from '../layout.service';
+import { ProductService } from '../product.service';
+import { HeaderComponent } from '../shared/header/header.component';
+import { FooterComponent } from '../shared/footer/footer.component';
+import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrl: './home.component.css',
     standalone: true,
-    imports: [NgIf]
+    imports: [CommonModule, NgIf, RouterLink, HeaderComponent, FooterComponent, SidebarComponent]
 })
 export class HomeComponent {
-    // --- Signals & State ---
-    public readonly currentAddress = signal('New address Islamabad');
-    public readonly showCityDropdown = signal(false);
-    public readonly citySearchQuery = signal('');
-    public readonly activeTab = signal('delivery');
-    public readonly showSignupModal = signal(false);
-    public readonly activeSort = signal('Relevance');
-    public readonly quickFilters = signal<Map<string, boolean>>(new Map());
-    public readonly priceFilter = signal<string | null>(null);
-    public readonly ratingFilter = signal<number | null>(null);
-    public readonly isScrolled = signal(false);
-    public readonly isDesktop = signal(true);
-    public readonly showStickyBanner = signal(true);
+    public readonly layout = inject(LayoutService);
+    private readonly router = inject(Router);
 
-    // --- Data ---
-    public readonly pakistaniCities = [
-        "Abbottabad", "Attock", "Bahawalpur", "Bannu", "Bhakkar", "Buner", "Chakwal", "Chaman",
-        "Charsadda", "Chiniot", "Dera Ghazi Khan", "Dera Ismail Khan", "Diamer", "Faisalabad",
-        "Ghanche", "Gilgit", "Gujranwala", "Gujrat", "Gwadar", "Haripur", "Hunza", "Hyderabad",
-        "Islamabad", "Jacobabad", "Jhang", "Jhelum", "Karak", "Karachi", "Kasur", "Khanewal", "Kharmang",
-        "Khushab", "Khuzdar", "Kohat", "Kohistan", "Lahore", "Lakki Marwat", "Larkana", "Mandi Bahauddin",
-        "Mansehra", "Mardan", "Mianwali", "Mingora", "Mirpur Khas", "Multan", "Muzaffargarh",
-        "Nagar", "Nawabshah", "Nowshera", "Okara", "Panjgur", "Peshawar", "Quetta", "Rahim Yar Khan",
-        "Rawalpindi", "Sahiwal", "Sargodha", "Shangla", "Shigar", "Shikarpur", "Sialkot", "Skardu",
-        "Sukkur", "Swabi", "Tank", "Turbat", "Wah Cantonment", "Zhob"
-    ].sort((a, b) => a.localeCompare(b));
+    openProductDetail(id: number) {
+        this.router.navigate(['/product', id]);
+    }
 
-    public readonly filteredCities = computed(() => {
-        const query = this.citySearchQuery().toLowerCase();
-        if (!query) return this.pakistaniCities;
-        return this.pakistaniCities.filter(city => city.toLowerCase().includes(query));
-    });
+    public exclusiveLimit = 4;
+    public freshLimit = 4;
+    public pantryLimit = 4;
+    public snacksLimit = 4;
+    public bakeryLimit = 4;
+    public storeLimit = 4;
+    public allLimit = 12;
 
-    public readonly tabs = [
-        { id: 'delivery', label: 'Delivery', icon: 'fas fa-motorcycle' },
-        { id: 'pickup', label: 'Pick-up', icon: 'fas fa-store' },
-        { id: 'pandamart', label: 'Noshahi panda mart', icon: 'fas fa-box-open' },
-        { id: 'shops', label: 'Shops', icon: 'fas fa-shopping-bag' },
-        { id: 'caterers', label: 'Caterers', icon: 'fas fa-utensil-spoon' }
-    ];
-
-    public readonly sortOptions = [
-        "Relevance", "Fastest delivery", "Distance", "Top rated", "Promotions", "Price: Low to High"
-    ];
-
-    public readonly offers = ["Free delivery", "Accepts vouchers", "Deals"];
-
-    public readonly sideCuisines = [
-        "American", "BBQ", "Beverages", "Biryani", "Broast", "Burgers", "Cakes & Bakery", "Chinese",
-        "Fast Food", "Pizza", "Pakistani", "Halwa Puri", "Paratha"
-    ];
-
+    // --- Data (Local to Home) ---
     public readonly mainCuisines = [
         { name: 'Fast Food', image: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&q=80&w=200' },
         { name: 'Biryani', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=80&w=200' },
         { name: 'Pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=200' },
-        { name: 'Pakistani', image: 'images/pakistani.png' },
+        { name: 'Pakistani', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=80&w=200' },
         { name: 'Burgers', image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&q=80&w=200' },
-        { name: 'Halwa Puri', image: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=200' },
-        { name: 'Paratha', image: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&q=80&w=200' }
+        { name: 'Halwa Puri', image: 'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Paratha', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80&w=200' }
     ];
 
     public readonly dailyDeals = [
-        { title: 'World Cup deals', discount: 'Up to 30% off', image: 'https://images.unsplash.com/photo-1544124499-58912cbddaad?auto=format&fit=crop&q=80&w=300' },
+        { title: 'World Cup deals', discount: 'Up to 30% off', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=400' },
         { title: 'World Cup deal', discount: 'Deal for Rs.590', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=300', logo: 'https://logos-world.net/wp-content/uploads/2020/04/KFC-Logo.png', discountClass: 'text-[#EAB308] text-xl md:text-2xl font-black mb-1' }
     ];
 
@@ -135,9 +105,11 @@ export class HomeComponent {
         }
     ];
 
+    // --- Computed (Local to Home) ---
     public readonly filteredHomeChefs = computed(() => {
-        const filters = this.quickFilters();
-        const sortKey = this.activeSort();
+        const filters = this.layout.quickFilters();
+        const sortKey = this.layout.activeSort();
+        const selectedCuisine = this.layout.selectedCuisine();
 
         const parseMinTime = (time: string) => {
             const match = time.match(/(\d+)(?:-(\d+))?/);
@@ -148,6 +120,10 @@ export class HomeComponent {
         const parsePrice = (priceLevel: string) => (priceLevel.match(/\$/g) || []).length;
 
         let list = [...this.homeChefs];
+
+        if (selectedCuisine) {
+            list = list.filter(chef => chef.cuisine.toLowerCase().includes(selectedCuisine.toLowerCase()));
+        }
 
         if (filters.get('ratings')) {
             list = list.filter(chef => Number(chef.rating) >= 4);
@@ -178,7 +154,6 @@ export class HomeComponent {
     });
 
     public readonly pickupRestaurants = computed(() => {
-        // For pickup we show only currently available chefs and highlight home-chef options
         return this.homeChefs.filter(chef => chef.isAvailable);
     });
 
@@ -203,95 +178,57 @@ export class HomeComponent {
         { name: 'Allure Beauty', time: '20 min', logo: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=200', isBeauty: true }
     ];
 
-    public readonly pakistaniCitiesGrid = [
-        { name: 'Islamabad', image: 'https://images.unsplash.com/photo-1664185494391-3c6c78244473?auto=format&fit=crop&w=500' },
-        { name: 'Karachi', image: 'https://images.unsplash.com/photo-1611068661807-c850d6a24f62?auto=format&fit=crop&w=500' },
-        { name: 'Lahore', image: 'https://images.unsplash.com/photo-1599079027267-7d0cea474b07?auto=format&fit=crop&w=500' },
-        { name: 'Faisalabad', image: 'https://images.unsplash.com/photo-1596798432210-63839ee4c486?auto=format&fit=crop&w=500' },
-        { name: 'Rawalpindi', image: 'https://images.unsplash.com/photo-1720507334744-02dce2b6794d?auto=format&fit=crop&w=500' },
-        { name: 'Multan', image: 'https://images.unsplash.com/photo-1598461814968-639d9321f483?auto=format&fit=crop&w=500' },
-        { name: 'Hyderabad', image: 'https://images.unsplash.com/photo-1587966606400-22bd02e9b907?auto=format&fit=crop&w=500' },
-        { name: 'Peshawar', image: 'https://images.unsplash.com/photo-1679861445408-7fe086b45fe9?auto=format&fit=crop&w=500' },
-        { name: 'Quetta', image: 'https://images.unsplash.com/photo-1646606161337-d644f966e672?auto=format&fit=crop&w=500' }
-    ];
-
     public readonly partnerCards = [
         { title: 'List your restaurant or shop', description: 'Would you like millions of new customers to enjoy your amazing food and goods? So would we!', buttonText: 'Get started', image: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&q=80&w=600' },
         { title: 'Become a rider', description: 'Enjoy flexibility, freedom and competitive earnings by delivering through foodpanda.', buttonText: 'Get started', image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=600' },
         { title: 'foodpanda for business', description: 'Order lunch or fuel for your team or book pandago for your business needs.', buttonText: 'Get started', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=600' }
     ];
 
-    public readonly footerColumns = [
-        {
-            title: 'Our Menus',
-            links: ['Chicken Burger', 'Brief Pizza', 'Fresh Vegetable', 'Sea Foods', 'Desserts', 'Cold Drinks', 'Discount']
-        },
-        {
-            title: 'Useful Links',
-            links: ['About Us', 'Restaurant', 'Our Chefs', 'Testimonials', 'Blogs', 'FAQ\'S', 'Privacy Policy']
-        }
+    public readonly pandamartBanners = [
+        { image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200', title: 'Up to 35% off groceries' },
+        { image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=1200', title: 'Freshness you can trust' }
     ];
 
-    // --- Methods ---
-    public toggleCityDropdown(event: MouseEvent) {
-        event.stopPropagation();
-        this.showCityDropdown.set(!this.showCityDropdown());
-        if (this.showCityDropdown()) {
-            this.citySearchQuery.set('');
-        }
+    public readonly pandamartCategories = [
+        { name: 'Offers', icon: 'fas fa-percentage', color: '#FFF1F2' },
+        { name: 'Fresh Produce', image: 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Meat & Seafood', image: 'https://images.unsplash.com/photo-1607623278264-274be50843b0?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Dairy & Eggs', image: 'https://images.unsplash.com/photo-1550583726-296521703221?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Breakfast & Snacks', image: 'https://images.unsplash.com/photo-1550583726-222a76200021?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Beverages', image: 'https://images.unsplash.com/photo-1544145945-f904253db0ad?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Cleaning Essentials', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=200' }
+    ];
+
+    private readonly productService = inject(ProductService);
+
+    public pandamartProducts = this.productService.exclusiveProducts;
+    public freshProducts = this.productService.freshProducts;
+    public pantryProducts = this.productService.pantryProducts;
+    public snackProducts = this.productService.snackProducts;
+    public bakeryProducts = this.productService.bakeryProducts;
+
+    public get allPandamartProducts() {
+        return this.productService.getAllProducts();
     }
 
-    public filterCities(event: any) {
-        this.citySearchQuery.set(event.target.value);
-    }
 
-    public updateLocation(city: string) {
-        const cleanCity = city.trim().replace(/^New address /, '');
-        this.currentAddress.set('New address ' + cleanCity);
-        this.showCityDropdown.set(false);
-    }
+    // Sliced getters for pagination
+    public get exclusiveDeals() { return this.pandamartProducts.slice(0, this.exclusiveLimit); }
+    public get freshDeals() { return this.freshProducts.slice(0, this.freshLimit); }
+    public get pantryDeals() { return this.pantryProducts.slice(0, this.pantryLimit); }
+    public get snackDeals() { return this.snackProducts.slice(0, this.snacksLimit); }
+    public get bakeryDeals() { return this.bakeryProducts.slice(0, this.bakeryLimit); }
+    public get allDeals() { return this.allPandamartProducts.slice(0, this.allLimit); }
 
-    public selectFirstCity(event: Event) {
-        event.preventDefault();
-        const matches = this.filteredCities();
-        if (matches.length > 0) {
-            this.updateLocation(matches[0]);
-        } else if (this.citySearchQuery()) {
-            this.updateLocation(this.citySearchQuery());
-        }
-    }
 
-    public toggleQuickFilter(filter: string) {
-        const current = new Map(this.quickFilters());
-        current.set(filter, !current.get(filter));
-        this.quickFilters.set(current);
-    }
-
-    public openSignupModal() {
-        this.showSignupModal.set(true);
-    }
+    public readonly pandamartBrands = [
+        { name: 'Unilever', image: 'https://images.unsplash.com/photo-1610348725531-843dff563e2c?auto=format&fit=crop&q=80&w=200' },
+        { name: 'Nestle', image: 'https://images.unsplash.com/photo-1550583726-296521703221?auto=format&fit=crop&q=80&w=200' },
+        { name: 'P&G', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=200' },
+        { name: 'National', image: 'https://images.unsplash.com/photo-1510300643-8e6d234a9749?auto=format&fit=crop&q=80&w=200' }
+    ];
 
     public scrollSlider(slider: HTMLElement, amount: number) {
         slider.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-
-    constructor() {
-        if (typeof window !== 'undefined') {
-            this.isDesktop.set(window.innerWidth >= 768);
-
-            window.addEventListener('scroll', () => {
-                this.isScrolled.set(window.scrollY > 50);
-            });
-
-            window.addEventListener('resize', () => {
-                this.isDesktop.set(window.innerWidth >= 768);
-            });
-
-            document.addEventListener('click', () => {
-                if (this.showCityDropdown()) {
-                    this.showCityDropdown.set(false);
-                }
-            });
-        }
     }
 }
