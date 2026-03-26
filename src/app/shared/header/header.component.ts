@@ -84,21 +84,19 @@ import { LayoutService } from '../../layout.service';
         </header>
 
         <!-- TABS -->
-        <div class="flex flex-wrap gap-2 border-t border-gray-50 pt-1" id="tabContainer">
+        <div class="flex flex-wrap gap-3 border-t border-gray-50 pt-3 pb-2" id="tabContainer">
           @for (tab of layout.tabs; track tab.id) {
-          <button class="tab-btn py-3 px-6 font-bold text-sm uppercase tracking-wide transition-all border-b-2" 
+          <button class="tab-btn py-2 px-5 font-bold text-sm uppercase tracking-wide transition-all border-2 rounded-full flex items-center gap-2" 
             [class.active-tab]="layout.activeTab() === tab.id"
             [class.text-custom-yellow-dark]="layout.activeTab() === tab.id" 
             [class.border-custom-yellow]="layout.activeTab() === tab.id"
+            [class.bg-yellow-50]="layout.activeTab() === tab.id"
             [class.text-gray-400]="layout.activeTab() !== tab.id" 
-            [class.border-transparent]="layout.activeTab() !== tab.id"
-            [style.border-bottom-color]="layout.activeTab() === tab.id ? '#FBCE07' : 'transparent'"
-            [style.color]="layout.activeTab() === tab.id ? '#EAB308' : '#9CA3AF'"
+            [class.border-gray-100]="layout.activeTab() !== tab.id"
+            [class.bg-white]="layout.activeTab() !== tab.id"
             (click)="onTabClick(tab.id)">
-            <div class="flex items-center gap-2">
-              <i [class]="tab.icon"></i>
-              <span>{{ tab.label }}</span>
-            </div>
+            <i [class]="tab.icon"></i>
+            <span>{{ tab.label }}</span>
           </button>
           }
         </div>
@@ -337,7 +335,9 @@ import { LayoutService } from '../../layout.service';
       to { transform: translateX(0); }
     }
     .active-tab {
-      background: #fff;
+      background: #fefce8; /* bg-yellow-50 */
+      border-color: #FBCE07;
+      box-shadow: 0 4px 6px -1px rgba(251, 206, 7, 0.2);
     }
   `]
 })
