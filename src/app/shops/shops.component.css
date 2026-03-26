@@ -43,3 +43,103 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
+
+/* ===== RESPONSIVE – TABLET (≤768px) ===== */
+@media (max-width: 768px) {
+  /* Hero header top padding override */
+  .shops-container header {
+    padding-top: 7rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Hero title */
+  .shops-container header h1 {
+    font-size: 1.8rem !important;
+  }
+
+  /* Category tab area */
+  .shops-container .flex.items-center.gap-4.overflow-x-auto {
+    gap: 0.5rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Category buttons */
+  .shops-container button.flex-shrink-0 {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 1rem !important;
+    gap: 0.4rem !important;
+  }
+
+  /* Shop name heading */
+  .shops-container h2.text-2xl {
+    font-size: 1.2rem !important;
+  }
+}
+
+/* ===== RESPONSIVE – MOBILE (≤480px) ===== */
+@media (max-width: 480px) {
+  .shops-container header {
+    padding-top: 5.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .shops-container header h1 {
+    font-size: 1.4rem !important;
+  }
+
+  /* Hero search bar */
+  .shops-container header input {
+    padding: 0.75rem 1rem 0.75rem 2.75rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Category buttons even smaller */
+  .shops-container button.flex-shrink-0 {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Shop name */
+  .shops-container h2.text-2xl {
+    font-size: 1rem !important;
+  }
+
+  /* Shop logo */
+  .shops-container .w-16.h-16 {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  /* Product grid gap */
+  .shops-container .grid {
+    gap: 0.5rem !important;
+  }
+
+  /* View All link */
+  .shops-container a.text-sm.font-black {
+    font-size: 0.7rem !important;
+  }
+}
+
+/* ===== RESPONSIVE – VERY SMALL (≤360px) ===== */
+@media (max-width: 360px) {
+  .shops-container header {
+    padding-top: 5rem !important;
+  }
+
+  .shops-container header h1 {
+    font-size: 1.2rem !important;
+  }
+
+  /* Category button text hidden – icon only */
+  .shops-container button.flex-shrink-0 span:not(.sr-only) {
+    display: none;
+  }
+
+  .shops-container button.flex-shrink-0 {
+    padding: 0.6rem !important;
+    border-radius: 0.75rem !important;
+  }
+}

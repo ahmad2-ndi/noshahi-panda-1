@@ -1,6 +1,7 @@
 /* Shop Detail Styles */
 .shop-detail-container {
     animation: fadeIn 0.5s ease-out;
+    overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -10,4 +11,96 @@
 
 .product-card:hover img {
     transform: scale(1.1);
+}
+
+/* ===== RESPONSIVE – TABLET (≤768px) ===== */
+@media (max-width: 768px) {
+    .shop-detail-container header {
+        padding-top: 7rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .shop-detail-container header h1 {
+        font-size: 1.8rem !important;
+    }
+
+    /* Shop logo */
+    .shop-detail-container .w-32.h-32 {
+        width: 5rem !important;
+        height: 5rem !important;
+    }
+
+    /* Rating & delivery pills */
+    .shop-detail-container header span.text-sm {
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.6rem !important;
+    }
+}
+
+/* ===== RESPONSIVE – MOBILE (≤480px) ===== */
+@media (max-width: 480px) {
+    .shop-detail-container header {
+        padding-top: 5.5rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    .shop-detail-container header h1 {
+        font-size: 1.4rem !important;
+    }
+
+    .shop-detail-container .w-32.h-32 {
+        width: 4rem !important;
+        height: 4rem !important;
+        border-radius: 0.75rem !important;
+        border-width: 2px !important;
+    }
+
+    .shop-detail-container h2.text-2xl {
+        font-size: 1.1rem !important;
+    }
+
+    /* Product card image area */
+    .shop-detail-container .h-32 {
+        height: 5rem !important;
+    }
+
+    /* Product grid gap */
+    .shop-detail-container .grid {
+        gap: 0.5rem !important;
+    }
+
+    /* Product card padding */
+    .shop-detail-container .product-card {
+        padding: 0.625rem !important;
+    }
+}
+
+/* ===== RESPONSIVE – VERY SMALL (≤360px) ===== */
+@media (max-width: 360px) {
+    .shop-detail-container header {
+        padding-top: 5rem !important;
+    }
+
+    .shop-detail-container header h1 {
+        font-size: 1.2rem !important;
+    }
+
+    .shop-detail-container .w-32.h-32 {
+        width: 3.5rem !important;
+        height: 3.5rem !important;
+    }
+
+    /* Shop description text */
+    .shop-detail-container header p {
+        font-size: 0.8rem !important;
+    }
+
+    /* Product grid: tighter */
+    .shop-detail-container .grid {
+        gap: 0.375rem !important;
+    }
+
+    .shop-detail-container .h-32 {
+        height: 4rem !important;
+    }
 }

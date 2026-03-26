@@ -2,11 +2,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f9fafb;
+  overflow-x: hidden;
 }
 
 /* ===== CUSTOM YELLOW #FBCE07 ===== */
@@ -64,6 +69,25 @@ body {
 
   .cuisine-img-container {
     height: 90px !important;
+  }
+}
+
+/* ===== GLOBAL MOBILE: disable heavy 3D transforms ===== */
+@media (max-width: 768px) {
+  .restaurant-card,
+  .deal-card,
+  .cuisine-card,
+  .product-card {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .restaurant-card:hover,
+  .deal-card:hover,
+  .cuisine-card:hover,
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 25px -8px rgba(251, 206, 7, 0.25);
   }
 }
 
