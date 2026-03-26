@@ -472,8 +472,9 @@ button:active {
 
   .tab-btn {
     white-space: nowrap;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.75rem;
   }
 
   #navbar-signup-btn span {
@@ -481,7 +482,52 @@ button:active {
   }
 
   .main-3d {
-    padding-top: 180px !important;
+    padding-top: 170px !important;
+  }
+
+  /* Promo banner stack on mobile */
+  .bg-gradient-to-r.from-yellow-50 {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  /* Slider cards smaller on mobile */
+  .slider-card {
+    min-width: 200px;
+  }
+
+  .brand-card {
+    min-width: 150px;
+  }
+
+  /* Hide scroll button on mobile - use touch scroll */
+  .scroll-btn {
+    display: none !important;
+  }
+
+  /* Cuisine section heading smaller */
+  h2.text-3xl {
+    font-size: 1.4rem;
+  }
+
+  /* Deal card text adjustments */
+  .deal-card {
+    height: 140px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-3d {
+    padding-top: 160px !important;
+  }
+
+  .slider-card {
+    min-width: 170px;
+  }
+
+  /* Product grid on very small screens */
+  .grid.grid-cols-2 {
+    gap: 0.5rem;
   }
 }
 

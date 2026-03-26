@@ -68,3 +68,22 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .product-card:hover {
+        transform: translateY(-8px) rotateX(0deg) rotateY(0deg) translateZ(0);
+        box-shadow: 0 15px 30px -10px rgba(0,0,0,0.12), 0 0 0 1px rgba(251, 206, 7, 0.2);
+    }
+
+    .add-btn:hover {
+        transform: scale(1.05) rotate(0deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .discount-badge {
+        font-size: 9px;
+        padding: 4px 8px;
+    }
+}
