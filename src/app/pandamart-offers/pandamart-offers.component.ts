@@ -58,26 +58,29 @@ export class PandamartOffersComponent implements OnInit {
     
     this.isLoading.set(true);
     
-    let categoryProducts: Product[] = [];
-    
-    switch(this.currentCategory) {
-      case 'exclusive': categoryProducts = this.productService.exclusiveProducts || []; break;
-      case 'fresh': categoryProducts = this.productService.freshProducts || []; break;
-      case 'pantry': categoryProducts = this.productService.pantryProducts || []; break;
-      case 'snacks': categoryProducts = this.productService.snackProducts || []; break;
-      case 'bakery': categoryProducts = this.productService.bakeryProducts || []; break;
-      case 'all': 
-      default: 
-        categoryProducts = this.productService.getAllProducts() || []; 
-        break;
-    }
-    
-    const nextItems = categoryProducts.slice(this.itemsLoaded, this.itemsLoaded + this.ITEMS_PER_PAGE);
-    this.products.set([...this.products(), ...nextItems]);
-    this.itemsLoaded += nextItems.length;
-    
-    this.hasMore.set(this.itemsLoaded < categoryProducts.length);
-    this.isLoading.set(false);
+    // Add artificial delay to show loading animation
+    setTimeout(() => {
+      let categoryProducts: Product[] = [];
+      
+      switch(this.currentCategory) {
+        case 'exclusive': categoryProducts = this.productService.exclusiveProducts || []; break;
+        case 'fresh': categoryProducts = this.productService.freshProducts || []; break;
+        case 'pantry': categoryProducts = this.productService.pantryProducts || []; break;
+        case 'snacks': categoryProducts = this.productService.snackProducts || []; break;
+        case 'bakery': categoryProducts = this.productService.bakeryProducts || []; break;
+        case 'all': 
+        default: 
+          categoryProducts = this.productService.getAllProducts() || []; 
+          break;
+      }
+      
+      const nextItems = categoryProducts.slice(this.itemsLoaded, this.itemsLoaded + this.ITEMS_PER_PAGE);
+      this.products.set([...this.products(), ...nextItems]);
+      this.itemsLoaded += nextItems.length;
+      
+      this.hasMore.set(this.itemsLoaded < categoryProducts.length);
+      this.isLoading.set(false);
+    }, 1000);
   }
 
   public goBack() {
