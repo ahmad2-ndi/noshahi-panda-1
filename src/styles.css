@@ -166,6 +166,73 @@ button:hover {
   transform: translateY(-3px);
 }
 
+/* ===== GLOBAL HEADER RESPONSIVENESS ===== */
+@media (max-width: 1024px) {
+  .max-w-7xl {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Logo scaling */
+  .text-3xl.font-black {
+    font-size: 1.5rem !important;
+  }
+
+  /* Header row padding */
+  header.flex.flex-wrap {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+    gap: 0.25rem !important;
+  }
+
+  /* Force tabs to scroll horizontally */
+  #tabContainer {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  #tabContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  #tabContainer .tab-btn {
+    white-space: nowrap !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ultra small logo */
+  .text-3xl.font-black {
+    font-size: 1.25rem !important;
+  }
+
+  /* Location pill text width */
+  #locationText {
+    max-width: 100px !important;
+    font-size: 0.75rem !important;
+  }
+
+  #locationPill {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Sign up button in header */
+  .trigger-signup-modal.bg-custom-yellow {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    font-size: 0.7rem !important;
+  }
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

@@ -459,19 +459,6 @@ button:active {
 
 /* Responsive Header & Layout adjustments */
 @media (max-width: 768px) {
-  #tabContainer {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* Firefox */
-  }
-
-  #tabContainer::-webkit-scrollbar {
-    display: none;
-    /* Chrome/Safari */
-  }
-
   .tab-btn {
     white-space: nowrap;
     padding-left: 0.75rem;
@@ -484,7 +471,7 @@ button:active {
   }
 
   .main-3d {
-    padding-top: 170px !important;
+    padding-top: 270px !important;
   }
 
   /* Promo banner stack on mobile */
@@ -520,7 +507,7 @@ button:active {
 
 @media (max-width: 480px) {
   .main-3d {
-    padding-top: 155px !important;
+    padding-top: 270px !important;
   }
 
   .slider-card {
@@ -559,7 +546,7 @@ button:active {
 /* ===== VERY SMALL SCREENS (≤360px) ===== */
 @media (max-width: 360px) {
   .main-3d {
-    padding-top: 145px !important;
+    padding-top: 270px !important;
   }
 
   /* Section headings */
@@ -742,6 +729,50 @@ button:active {
 
 .animate-slide-up {
   animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pandamart Search Header Fixes */
+@media (max-width: 768px) {
+  .max-w-4xl.text-center.space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .max-w-4xl h1.text-4xl {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .relative.group input {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    padding-left: 3.5rem !important;
+    font-size: 1rem !important;
+    border-radius: 1.5rem !important;
+  }
+
+  .relative.group i.fa-search {
+    left: 1.25rem !important;
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .max-w-4xl h1.text-4xl {
+    font-size: 1.5rem !important;
+  }
+
+  /* Pandamart banner content scaling */
+  .pandamart-hero-slider h2 {
+    font-size: 1.75rem !important;
+    line-height: 1.1 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .pandamart-hero-slider button {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 1rem !important;
+  }
 }
 
 .flip-horizontal {
