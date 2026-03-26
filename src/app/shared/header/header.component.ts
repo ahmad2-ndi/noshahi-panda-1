@@ -58,13 +58,12 @@ import { LayoutService } from '../../layout.service';
           </div>
           <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
             <button type="button" (click)="layout.openSignupModal()"
-              class="trigger-signup-modal text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
+              class="trigger-signup-modal hidden lg:block text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
               in</button>
             <button type="button" (click)="layout.openSignupModal()"
-              class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center gap-1"
+              class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition items-center gap-2 hidden lg:flex"
               style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
-              <i class="fas fa-gift"></i> <span class="hidden sm:inline">Sign up for free delivery</span><span
-                class="sm:hidden">Sign up</span>
+              <i class="fas fa-gift"></i> <span>Sign up for free delivery</span>
             </button>
             <button (click)="layout.showCart.set(true)" 
               class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-all relative cart-icon-btn"
@@ -75,16 +74,22 @@ import { LayoutService } from '../../layout.service';
                 {{ layout.totalCartQuantity() }}
               </span>
             </button>
-            <div class="flex items-center text-gray-700 border-l pl-3 border-gray-300">
+            <div class="hidden lg:flex items-center text-gray-700 border-l pl-3 border-gray-300">
               <i class="fas fa-globe text-gray-500 mr-1"></i>
               <span class="font-medium">EN</span>
               <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
             </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-200 transition-colors"
+              (click)="isMobileMenuOpen.set(true)">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
           </div>
         </header>
 
-        <!-- TABS -->
-        <div class="flex flex-wrap gap-3 border-t border-gray-50 pt-3 pb-2" id="tabContainer">
+        <!-- TABS (Desktop Only) -->
+        <div class="hidden lg:flex flex-wrap gap-3 border-t border-gray-50 pt-3 pb-2" id="tabContainer">
           @for (tab of layout.tabs; track tab.id) {
           <button class="tab-btn py-2 px-5 font-bold text-sm uppercase tracking-wide transition-all border-2 rounded-full flex items-center gap-2" 
             [class.active-tab]="layout.activeTab() === tab.id"
@@ -98,6 +103,65 @@ import { LayoutService } from '../../layout.service';
             <i [class]="tab.icon"></i>
             <span>{{ tab.label }}</span>
           </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== MOBILE MENU DRAWER ========== -->
+    <div *ngIf="isMobileMenuOpen()" class="fixed inset-0 z-[10002] bg-black/50 backdrop-blur-sm lg:hidden transition-opacity"
+      (click)="isMobileMenuOpen.set(false)">
+      <div (click)="$event.stopPropagation()"
+        class="absolute top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-2xl flex flex-col animate-slide-left">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b flex items-center justify-between bg-white">
+          <div class="flex flex-col leading-none tracking-tighter">
+            <span class="text-xl font-black text-gray-800">NOSHAHI</span>
+            <span class="text-xl font-black text-custom-yellow">PANDA</span>
+          </div>
+          <button (click)="isMobileMenuOpen.set(false)" class="text-gray-400 hover:text-red-500 bg-gray-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <!-- User Actions -->
+        <div class="p-6 border-b bg-gray-50 space-y-4">
+          <button (click)="isMobileMenuOpen.set(false); layout.openSignupModal()" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">
+            <i class="fas fa-user"></i> Log in / Sign up
+          </button>
+          <div class="flex items-center justify-between px-2 text-gray-600 font-medium">
+            <span class="flex items-center gap-2"><i class="fas fa-globe"></i> Language</span>
+            <span class="flex items-center gap-1 text-sm bg-white border border-gray-200 px-2 py-1 rounded-lg">EN <i class="fas fa-chevron-down text-xs"></i></span>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex-grow overflow-y-auto py-2">
+          <h4 class="px-6 py-2 text-xs font-black text-gray-400 uppercase tracking-widest">Menu</h4>
+          @for (tab of layout.tabs; track tab.id) {
+            <button class="w-full text-left px-6 py-4 flex items-center gap-4 transition-colors relative"
+              [class.bg-yellow-50]="layout.activeTab() === tab.id"
+              (click)="onTabClick(tab.id)">
+              <div *ngIf="layout.activeTab() === tab.id" class="absolute left-0 top-0 bottom-0 w-1.5 bg-custom-yellow rounded-r"></div>
+              
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-sm"
+                [class.bg-custom-yellow]="layout.activeTab() === tab.id"
+                [class.text-gray-800]="layout.activeTab() === tab.id"
+                [class.bg-white]="layout.activeTab() !== tab.id"
+                [class.border]="layout.activeTab() !== tab.id"
+                [class.border-gray-100]="layout.activeTab() !== tab.id"
+                [class.text-gray-500]="layout.activeTab() !== tab.id">
+                <i [class]="tab.icon + ' text-lg'"></i>
+              </div>
+              
+              <span class="text-base"
+                [class.font-black]="layout.activeTab() === tab.id"
+                [class.text-gray-800]="layout.activeTab() === tab.id"
+                [class.font-medium]="layout.activeTab() !== tab.id"
+                [class.text-gray-600]="layout.activeTab() !== tab.id">
+                {{ tab.label }}
+              </span>
+            </button>
           }
         </div>
       </div>
@@ -342,6 +406,7 @@ import { LayoutService } from '../../layout.service';
   `]
 })
 export class HeaderComponent {
+  public readonly isMobileMenuOpen = signal(false);
   public readonly showStickyBanner = signal(true);
   public readonly pulseActive = signal(false);
   private router = inject(Router);
@@ -359,6 +424,8 @@ export class HeaderComponent {
 
   onTabClick(tabId: string) {
     this.layout.activeTab.set(tabId);
+    this.isMobileMenuOpen.set(false);
+    
     if (tabId === 'shops') {
       this.router.navigate(['/shops']);
     } else if (tabId === 'caterers') {
