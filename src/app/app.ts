@@ -8,7 +8,4 @@ import { RouterOutlet, Router } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  constructor() {
-    inject(Router).navigate(['/']);
-  }
 }

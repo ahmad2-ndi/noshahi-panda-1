@@ -30,6 +30,9 @@ export class PandamartOffersComponent implements OnInit {
   private readonly ITEMS_PER_PAGE = 12;
 
   ngOnInit() {
+    // Set active tab to pandamart when visiting this page
+    this.layout.activeTab.set('pandamart');
+
     this.route.queryParams.subscribe(params => {
       this.currentCategory = params['category'] || 'all';
       
