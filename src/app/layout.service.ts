@@ -68,7 +68,8 @@ export class LayoutService {
     { id: 'pickup', label: 'Pick-up', icon: 'fas fa-store' },
     { id: 'pandamart', label: 'Noshahi panda mart', icon: 'fas fa-box-open' },
     { id: 'shops', label: 'Shops', icon: 'fas fa-shopping-bag' },
-    { id: 'caterers', label: 'Caterers', icon: 'fas fa-utensil-spoon' }
+    { id: 'caterers', label: 'Caterers', icon: 'fas fa-utensil-spoon' },
+    { id: 'track-order', label: 'Track My Order', icon: 'fas fa-search-location' }
   ];
 
   constructor() {

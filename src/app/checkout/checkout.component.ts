@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { OrderService } from '../order.service';
 import { LayoutService } from '../layout.service';
 import { HeaderComponent } from '../shared/header/header.component';
 import { FooterComponent } from '../shared/footer/footer.component';
@@ -276,6 +277,7 @@ import { FooterComponent } from '../shared/footer/footer.component';
 })
 export class CheckoutComponent {
   public layout = inject(LayoutService);
+  private orderService = inject(OrderService);
   private router = inject(Router);
   public isEditingAddress = signal(false);
 
@@ -302,8 +304,15 @@ export class CheckoutComponent {
       this.isEditingAddress.set(true);
       return;
     }
-    alert('Thank you! Your order has been placed successfully.');
+
+    const trackingId = this.orderService.placeOrder(
+      this.layout.cartItems(),
+      this.layout.userAddress(),
+      this.layout.selectedPaymentMethod(),
+      this.layout.totalCartPrice() + this.layout.deliveryFee()
+    );
+
     this.layout.cartItems.set([]);
-    this.router.navigate(['/']);
+    this.router.navigate(['/order-success'], { queryParams: { id: trackingId } });
   }
 }

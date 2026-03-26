@@ -7,6 +7,9 @@ import { ShopsComponent } from './shops/shops.component';
 import { ShopDetailComponent } from './shop-detail/shop-detail.component';
 import { CaterersComponent } from './caterers/caterers.component';
 
+import { OrderSuccessComponent } from './order-success/order-success.component';
+import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'pandamart-offers', component: PandamartOffersComponent },
@@ -15,5 +18,7 @@ export const routes: Routes = [
     { path: 'shops', component: ShopsComponent },
     { path: 'shop/:id', component: ShopDetailComponent },
     { path: 'caterers', component: CaterersComponent },
+    { path: 'order-success', component: OrderSuccessComponent },
+    { path: 'track-order', component: OrderTrackingComponent },
     { path: '**', redirectTo: '' }
 ];

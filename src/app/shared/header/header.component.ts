@@ -363,6 +363,8 @@ export class HeaderComponent {
       this.router.navigate(['/shops']);
     } else if (tabId === 'caterers') {
       this.router.navigate(['/caterers']);
+    } else if (tabId === 'track-order') {
+      this.router.navigate(['/track-order']);
     } else {
       this.router.navigate(['/']);
     }
