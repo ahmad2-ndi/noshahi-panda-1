@@ -1,12 +1,14 @@
 import { Component, signal, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { LayoutService } from '../../layout.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   template: `
     <!-- ========== FIXED HEADER ========== -->
     <div class="fixed top-0 left-0 w-full bg-white shadow-sm z-[1000] transition-all duration-300" 
@@ -57,14 +59,26 @@ import { LayoutService } from '../../layout.service';
             </div>
           </div>
           <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
-            <button type="button" (click)="layout.openSignupModal()"
-              class="trigger-signup-modal hidden lg:block text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
-              in</button>
-            <button type="button" (click)="layout.openSignupModal()"
-              class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition items-center gap-2 hidden lg:flex"
-              style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
-              <i class="fas fa-gift"></i> <span>Sign up for free delivery</span>
-            </button>
+            <ng-container *ngIf="!authService.isLoggedIn()">
+              <button type="button" (click)="layout.openSignupModal()"
+                class="trigger-signup-modal hidden lg:block text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
+                in</button>
+              <button type="button" (click)="layout.openSignupModal()"
+                class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition items-center gap-2 hidden lg:flex"
+                style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
+                <i class="fas fa-gift"></i> <span>Sign up for free delivery</span>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="authService.isLoggedIn()">
+              <div class="hidden lg:flex items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100 shadow-sm">
+                <i class="fas fa-user-circle text-custom-yellow-dark text-lg"></i>
+                <span class="text-gray-800 font-bold truncate max-w-[120px] text-sm">{{ authService.currentUser()?.email }}</span>
+              </div>
+              <button type="button" (click)="authService.logout()"
+                class="hidden lg:block text-gray-500 hover:text-red-500 font-medium cursor-pointer bg-transparent border-0 p-0 text-sm transition-colors">
+                <i class="fas fa-sign-out-alt"></i>
+              </button>
+            </ng-container>
             <button (click)="layout.showCart.set(true)" 
               class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-all relative cart-icon-btn"
               [class.pulse-active]="pulseActive()">
@@ -126,9 +140,19 @@ import { LayoutService } from '../../layout.service';
         
         <!-- User Actions -->
         <div class="p-6 border-b bg-gray-50 space-y-4">
-          <button (click)="isMobileMenuOpen.set(false); layout.openSignupModal()" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">
+          <button *ngIf="!authService.isLoggedIn()" (click)="isMobileMenuOpen.set(false); layout.openSignupModal()" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">
             <i class="fas fa-user"></i> Log in / Sign up
           </button>
+          
+          <div *ngIf="authService.isLoggedIn()" class="w-full bg-white border border-gray-200 py-3 px-4 rounded-xl shadow-sm flex flex-col items-center justify-center gap-2">
+            <div class="flex items-center gap-2 text-gray-800 font-bold">
+              <i class="fas fa-user-circle text-custom-yellow text-xl"></i>
+              <span class="truncate max-w-[200px]">{{ authService.currentUser()?.email }}</span>
+            </div>
+            <button (click)="isMobileMenuOpen.set(false); authService.logout()" class="text-sm text-red-500 hover:text-red-600 font-bold mt-1 flex items-center gap-1 transition-colors">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
           <div class="flex items-center justify-between px-2 text-gray-600 font-medium">
             <span class="flex items-center gap-2"><i class="fas fa-globe"></i> Language</span>
             <span class="flex items-center gap-1 text-sm bg-white border border-gray-200 px-2 py-1 rounded-lg">EN <i class="fas fa-chevron-down text-xs"></i></span>
@@ -168,7 +192,7 @@ import { LayoutService } from '../../layout.service';
     </div>
 
     <!-- STICKY BOTTOM BANNER -->
-    <div *ngIf="showStickyBanner()"
+    <div *ngIf="showStickyBanner() && !authService.isLoggedIn()"
       class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[99] p-4 animate-slide-up">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div class="flex items-center gap-4">
@@ -216,22 +240,24 @@ import { LayoutService } from '../../layout.service';
         </div>
 
         <div class="flex flex-col gap-4" style="transform: translateZ(20px);">
-          <!-- Facebook -->
-          <button class="social-btn btn-facebook flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-black text-white bg-[#1877F2] hover:bg-[#166fe5] shadow-lg transition-all hover:-translate-y-1 active:translate-y-0">
-            <i class="fab fa-facebook-f text-xl"></i>
-            <span>Continue with Facebook</span>
+          
+          <div class="space-y-3 mb-2">
+             <input type="email" [(ngModel)]="authEmail" placeholder="Email Address" 
+               class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium">
+             <input type="password" [(ngModel)]="authPassword" placeholder="Password" 
+               class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800">
+             
+             <div *ngIf="authError()" class="text-red-500 text-sm font-bold text-center mt-1 animate-fade-in">{{ authError() }}</div>
+             <div *ngIf="authSuccess()" class="text-green-500 text-sm font-bold text-center mt-1 animate-fade-in">{{ authSuccess() }}</div>
+          </div>
+
+          <!-- Native Buttons -->
+          <button (click)="handleLogin()" class="w-full py-4 rounded-2xl font-black text-gray-800 bg-[#FBCE07] hover:bg-[#EAB308] shadow-[0_10px_20px_rgba(251,206,7,0.3)] transition-all hover:-translate-y-1 active:translate-y-0 border-b-4 border-[#EAB308]">
+            Log in
           </button>
 
-          <!-- Google -->
-          <button class="social-btn btn-google flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-100 hover:bg-gray-50 shadow-lg transition-all hover:-translate-y-1 active:translate-y-0">
-            <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" class="w-6 h-6">
-            <span>Continue with Google</span>
-          </button>
-
-          <!-- Apple -->
-          <button class="social-btn btn-apple flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-black text-white bg-black hover:bg-gray-900 shadow-xl transition-all hover:-translate-y-1 active:translate-y-0">
-            <i class="fab fa-apple text-xl"></i>
-            <span>Continue with Apple</span>
+          <button (click)="handleSignup()" class="w-full py-4 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-800 hover:bg-gray-50 transition-all hover:-translate-y-1 active:translate-y-0">
+            Sign up
           </button>
 
           <div class="flex items-center gap-4 my-2">
@@ -240,13 +266,10 @@ import { LayoutService } from '../../layout.service';
             <div class="flex-grow h-[2px] bg-gray-100"></div>
           </div>
 
-          <!-- Native Buttons -->
-          <button class="w-full py-4 rounded-2xl font-black text-gray-800 bg-[#FBCE07] hover:bg-[#EAB308] shadow-[0_10px_20px_rgba(251,206,7,0.3)] transition-all hover:-translate-y-1 active:translate-y-0 border-b-4 border-[#EAB308]">
-            Log in
-          </button>
-
-          <button class="w-full py-4 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-800 hover:bg-gray-50 transition-all hover:-translate-y-1 active:translate-y-0">
-            Sign up
+          <!-- Google -->
+          <button class="social-btn btn-google flex items-center justify-center gap-3 w-full py-3 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-100 hover:bg-gray-50 shadow-sm transition-all hover:-translate-y-1 active:translate-y-0">
+            <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" class="w-5 h-5">
+            <span>Continue with Google</span>
           </button>
         </div>
 
@@ -410,6 +433,12 @@ export class HeaderComponent {
   public readonly showStickyBanner = signal(true);
   public readonly pulseActive = signal(false);
   private router = inject(Router);
+  public authService = inject(AuthService);
+
+  public authEmail = '';
+  public authPassword = '';
+  public authError = signal('');
+  public authSuccess = signal('');
 
   constructor(public layout: LayoutService) {
     effect(() => {
@@ -434,6 +463,40 @@ export class HeaderComponent {
       this.router.navigate(['/track-order']);
     } else {
       this.router.navigate(['/']);
+    }
+  }
+
+  handleSignup() {
+    this.authError.set('');
+    this.authSuccess.set('');
+    const res = this.authService.signup(this.authEmail, this.authPassword);
+    if (res.success) {
+      this.authSuccess.set(res.message);
+      setTimeout(() => {
+        this.layout.showSignupModal.set(false);
+        this.authSuccess.set('');
+        this.authEmail = '';
+        this.authPassword = '';
+      }, 1000);
+    } else {
+      this.authError.set(res.message);
+    }
+  }
+
+  handleLogin() {
+    this.authError.set('');
+    this.authSuccess.set('');
+    const res = this.authService.login(this.authEmail, this.authPassword);
+    if (res.success) {
+      this.authSuccess.set(res.message);
+      setTimeout(() => {
+        this.layout.showSignupModal.set(false);
+        this.authSuccess.set('');
+        this.authEmail = '';
+        this.authPassword = '';
+      }, 1000);
+    } else {
+      this.authError.set(res.message);
     }
   }
 }

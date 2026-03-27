@@ -6,6 +6,7 @@ import { ProductService } from '../product.service';
 import { HeaderComponent } from '../shared/header/header.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
+import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-home',
@@ -16,6 +17,7 @@ import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 })
 export class HomeComponent {
     public readonly layout = inject(LayoutService);
+    public readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
     openProductDetail(id: number) {
