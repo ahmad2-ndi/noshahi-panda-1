@@ -60,10 +60,10 @@ import { AuthService } from '../../auth.service';
           </div>
           <div class="flex items-center gap-3 sm:gap-5 text-sm sm:text-base">
             <ng-container *ngIf="!authService.isLoggedIn()">
-              <button type="button" (click)="layout.openSignupModal()"
+              <button type="button" (click)="layout.openSignupModal(); authMode.set('login')"
                 class="trigger-signup-modal hidden lg:block text-gray-600 hover:text-custom-yellow-dark font-medium cursor-pointer bg-transparent border-0 p-0">Log
                 in</button>
-              <button type="button" (click)="layout.openSignupModal()"
+              <button type="button" (click)="layout.openSignupModal(); authMode.set('signup')"
                 class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm transition items-center gap-2 hidden lg:flex"
                 style="box-shadow: 0 8px 14px -6px rgba(251,206,7,0.4);">
                 <i class="fas fa-gift"></i> <span>Sign up for free delivery</span>
@@ -140,7 +140,7 @@ import { AuthService } from '../../auth.service';
         
         <!-- User Actions -->
         <div class="p-6 border-b bg-gray-50 space-y-4">
-          <button *ngIf="!authService.isLoggedIn()" (click)="isMobileMenuOpen.set(false); layout.openSignupModal()" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">
+          <button *ngIf="!authService.isLoggedIn()" (click)="isMobileMenuOpen.set(false); authMode.set('login'); layout.openSignupModal('login')" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">
             <i class="fas fa-user"></i> Log in / Sign up
           </button>
           
@@ -205,7 +205,7 @@ import { AuthService } from '../../auth.service';
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <button (click)="layout.openSignupModal()"
+          <button (click)="layout.openSignupModal('signup'); authMode.set('signup')"
             class="bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-bold px-6 py-2.5 rounded-full shadow-md transition whitespace-nowrap text-sm">
             Sign up now
           </button>
@@ -218,47 +218,80 @@ import { AuthService } from '../../auth.service';
 
     <!-- ========== SIGNUP MODAL HTML (RESTORATION) ========== -->
     <div *ngIf="layout.showSignupModal()" id="signupModal" 
-      class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 active"
+      class="fixed inset-0 z-[9999] flex justify-center bg-black/60 backdrop-blur-sm p-4 active sm:items-center items-start overflow-y-auto"
       (click)="$event.target === $event.currentTarget && layout.showSignupModal.set(false)">
       
-      <div class="modal-content bg-white w-full max-w-md rounded-[2.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] relative p-10 border-4"
+      <div class="modal-content bg-white w-full max-w-md rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] relative p-6 sm:p-10 border-2 sm:border-4 my-auto"
            style="transform-style: preserve-3d; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border-color: #FBCE07;">
         
         <!-- Close Button -->
         <button id="closeModal" (click)="layout.showSignupModal.set(false)"
-          class="absolute -top-4 -right-4 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-xl text-gray-800 hover:text-red-500 transition-all border-2 border-gray-100 z-20">
-          <i class="fas fa-times text-xl"></i>
+          class="absolute top-3 right-3 sm:-top-4 sm:-right-4 w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-white shadow-xl text-gray-800 hover:text-red-500 transition-all border-2 border-gray-100 z-20">
+          <i class="fas fa-times text-lg sm:text-xl"></i>
         </button>
 
-        <div class="text-center mb-8" style="transform: translateZ(30px);">
-          <div class="inline-flex flex-col leading-none tracking-tighter mb-4">
-            <span class="text-2xl font-black text-gray-800">NOSHAHI</span>
-            <span class="text-2xl font-black" style="color: #FBCE07;">PANDA</span>
+        <div class="text-center mb-6 sm:mb-8" style="transform: translateZ(30px);">
+          <div class="inline-flex flex-col leading-none tracking-tighter mb-3 sm:mb-4">
+            <span class="text-xl sm:text-2xl font-black text-gray-800">NOSHAHI</span>
+            <span class="text-xl sm:text-2xl font-black" style="color: #FBCE07;">PANDA</span>
           </div>
-          <h2 class="text-3xl font-black text-gray-800 mb-2">Welcome Back!</h2>
-          <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">Sign up or log in to continue</p>
+          <h2 class="text-2xl sm:text-3xl font-black text-gray-800 mb-1 sm:mb-2">Welcome Back!</h2>
+          <p class="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Sign up or log in to continue</p>
         </div>
 
         <div class="flex flex-col gap-4" style="transform: translateZ(20px);">
           
-          <div class="space-y-3 mb-2">
-             <input type="email" [(ngModel)]="authEmail" placeholder="Email Address" 
-               class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium">
-             <input type="password" [(ngModel)]="authPassword" placeholder="Password" 
-               class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800">
+          <!-- Mode Toggle -->
+          <div class="flex bg-gray-100 p-1 rounded-xl mb-2 relative">
+             <div class="absolute inset-y-1 w-1/2 bg-white rounded-lg shadow-sm transition-transform duration-300"
+                  [ngStyle]="{'transform': authMode() === 'login' ? 'translateX(0)' : 'translateX(100%)' }"></div>
              
-             <div *ngIf="authError()" class="text-red-500 text-sm font-bold text-center mt-1 animate-fade-in">{{ authError() }}</div>
-             <div *ngIf="authSuccess()" class="text-green-500 text-sm font-bold text-center mt-1 animate-fade-in">{{ authSuccess() }}</div>
+             <button (click)="authMode.set('login'); authError.set('');"
+                     class="flex-1 py-2.5 text-sm font-bold text-center z-10 transition-colors"
+                     [ngClass]="authMode() === 'login' ? 'text-gray-800' : 'text-gray-500'">Log in</button>
+             <button (click)="authMode.set('signup'); authError.set('');"
+                     class="flex-1 py-2.5 text-sm font-bold text-center z-10 transition-colors"
+                     [ngClass]="authMode() === 'signup' ? 'text-gray-800' : 'text-gray-500'">Sign up</button>
           </div>
 
-          <!-- Native Buttons -->
-          <button (click)="handleLogin()" class="w-full py-4 rounded-2xl font-black text-gray-800 bg-[#FBCE07] hover:bg-[#EAB308] shadow-[0_10px_20px_rgba(251,206,7,0.3)] transition-all hover:-translate-y-1 active:translate-y-0 border-b-4 border-[#EAB308]">
-            Log in
-          </button>
+          <!-- LOGIN MODE -->
+          <ng-container *ngIf="authMode() === 'login'">
+            <div class="space-y-3">
+               <input type="text" [(ngModel)]="authEmail" placeholder="Email or Phone" 
+                 class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               <input type="password" [(ngModel)]="authPassword" placeholder="Password" 
+                 class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               <div *ngIf="authError()" class="text-red-500 text-xs font-bold text-center mt-1 animate-fade-in">{{ authError() }}</div>
+               <div *ngIf="authSuccess()" class="text-green-500 text-xs font-bold text-center mt-1 animate-fade-in">{{ authSuccess() }}</div>
+            </div>
+            <button (click)="handleLogin()" class="w-full py-4 rounded-2xl font-black text-gray-800 bg-[#FBCE07] hover:bg-[#EAB308] shadow-[0_10px_20px_rgba(251,206,7,0.3)] transition-all hover:-translate-y-1 active:translate-y-0 border-b-4 border-[#EAB308] mt-2">
+              Log in to your account
+            </button>
+          </ng-container>
 
-          <button (click)="handleSignup()" class="w-full py-4 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-800 hover:bg-gray-50 transition-all hover:-translate-y-1 active:translate-y-0">
-            Sign up
-          </button>
+          <!-- FLAT SIGNUP MODE -->
+          <ng-container *ngIf="authMode() === 'signup'">
+            <div class="space-y-3">
+               <div class="flex flex-col sm:flex-row gap-3">
+                 <input type="text" [(ngModel)]="authFirstName" placeholder="First Name *" 
+                   class="w-full sm:w-1/2 py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+                 <input type="text" [(ngModel)]="authLastName" placeholder="Last Name" 
+                   class="w-full sm:w-1/2 py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               </div>
+               <input type="tel" [(ngModel)]="authPhone" placeholder="Mobile Number *" 
+                 class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               <input type="email" [(ngModel)]="authEmail" placeholder="Email Address *" 
+                 class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               <input type="password" [(ngModel)]="authPassword" placeholder="Password *" 
+                 class="w-full py-3 px-4 rounded-xl border border-gray-200 focus:border-[#FBCE07] focus:ring-2 focus:ring-[#FBCE07] transition-all outline-none font-medium text-gray-800 text-sm sm:text-base">
+               
+               <div *ngIf="authError()" class="text-red-500 text-xs font-bold text-center mt-1 animate-fade-in">{{ authError() }}</div>
+               <div *ngIf="authSuccess()" class="text-green-500 text-xs font-bold text-center mt-1 animate-fade-in">{{ authSuccess() }}</div>
+            </div>
+            <button (click)="handleSignup()" class="w-full py-4 rounded-2xl font-black text-gray-800 bg-[#FBCE07] hover:bg-[#EAB308] shadow-[0_10px_20px_rgba(251,206,7,0.3)] transition-all hover:-translate-y-1 active:translate-y-0 border-b-4 border-[#EAB308] mt-2">
+              Create account
+            </button>
+          </ng-container>
 
           <div class="flex items-center gap-4 my-2">
             <div class="flex-grow h-[2px] bg-gray-100"></div>
@@ -266,11 +299,14 @@ import { AuthService } from '../../auth.service';
             <div class="flex-grow h-[2px] bg-gray-100"></div>
           </div>
 
-          <!-- Google -->
-          <button class="social-btn btn-google flex items-center justify-center gap-3 w-full py-3 rounded-2xl font-black text-gray-700 bg-white border-2 border-gray-100 hover:bg-gray-50 shadow-sm transition-all hover:-translate-y-1 active:translate-y-0">
-            <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" class="w-5 h-5">
-            <span>Continue with Google</span>
+          <!-- Google Identity Container (Works across modes) -->
+          <div id="google-btn-container" class="flex justify-center w-full"></div>
+          
+          <button (click)="handleFacebookLogin()" class="social-btn btn-facebook flex items-center justify-center gap-3 w-full py-3 rounded-2xl font-black text-white bg-[#1877F2] hover:bg-[#166fe5] shadow-sm transition-all hover:-translate-y-1 active:translate-y-0 mt-3">
+            <i class="fab fa-facebook-f text-xl"></i>
+            <span>Continue with Facebook</span>
           </button>
+
         </div>
 
         <p class="text-[10px] text-center text-gray-400 mt-10 leading-relaxed font-bold uppercase tracking-wider" style="transform: translateZ(10px);">
@@ -437,10 +473,23 @@ export class HeaderComponent {
 
   public authEmail = '';
   public authPassword = '';
+  public authFirstName = '';
+  public authLastName = '';
+  public authPhone = '';
+
   public authError = signal('');
   public authSuccess = signal('');
+  public authMode = signal<'login' | 'signup'>('login');
 
   constructor(public layout: LayoutService) {
+    effect(() => {
+      // Set initial Auth mode based on layout trigger
+      if (this.layout.showSignupModal()) {
+         this.authMode.set(this.layout.initialAuthMode());
+         this.renderGoogleButton();
+      }
+    }, { allowSignalWrites: true });
+
     effect(() => {
       // Trigger whenever cartPulse changes
       const pulse = this.layout.cartPulse();
@@ -449,6 +498,18 @@ export class HeaderComponent {
         setTimeout(() => this.pulseActive.set(false), 400);
       }
     }, { allowSignalWrites: true });
+
+    effect(() => {
+      // Toggle body overflow when any modal/drawer is open
+      const isAnyModalOpen = this.layout.showSignupModal() || this.layout.showCart() || this.isMobileMenuOpen();
+      if (typeof document !== 'undefined') {
+        if (isAnyModalOpen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      }
+    });
   }
 
   onTabClick(tabId: string) {
@@ -469,14 +530,27 @@ export class HeaderComponent {
   handleSignup() {
     this.authError.set('');
     this.authSuccess.set('');
-    const res = this.authService.signup(this.authEmail, this.authPassword);
+    
+    if (!this.authFirstName || !this.authPhone || !this.authEmail || !this.authPassword) {
+      this.authError.set('Please fill out all required fields (*)');
+      return;
+    }
+
+    const userData = {
+      firstName: this.authFirstName,
+      lastName: this.authLastName,
+      phone: this.authPhone,
+      email: this.authEmail,
+      password: this.authPassword
+    };
+
+    const res = this.authService.signup(userData);
     if (res.success) {
       this.authSuccess.set(res.message);
       setTimeout(() => {
         this.layout.showSignupModal.set(false);
         this.authSuccess.set('');
-        this.authEmail = '';
-        this.authPassword = '';
+        this.resetAuthForm();
       }, 1000);
     } else {
       this.authError.set(res.message);
@@ -492,11 +566,143 @@ export class HeaderComponent {
       setTimeout(() => {
         this.layout.showSignupModal.set(false);
         this.authSuccess.set('');
-        this.authEmail = '';
-        this.authPassword = '';
+        this.resetAuthForm();
       }, 1000);
     } else {
       this.authError.set(res.message);
     }
+  }
+
+  private resetAuthForm() {
+    this.authEmail = '';
+    this.authPassword = '';
+    this.authFirstName = '';
+    this.authLastName = '';
+    this.authPhone = '';
+  }
+
+  // Google Identity Services Setup
+  private renderGoogleButton() {
+    // We delay slightly to ensure the DOM is ready since it's within *ngIf
+    setTimeout(() => {
+      const google = (window as any).google;
+      const btnContainer = document.getElementById('google-btn-container');
+      
+      if (!google || !btnContainer) return;
+
+      if (!(window as any).handleGoogleLogin) {
+        (window as any).handleGoogleLogin = (response: any) => this.handleGoogleCallback(response);
+      }
+
+      google.accounts.id.initialize({
+        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // MUST REPLACE WITH REAL CLIENT ID FROM CLOUD CONSOLE
+        callback: (window as any).handleGoogleLogin
+      });
+
+      const btnWidth = btnContainer.clientWidth > 0 ? btnContainer.clientWidth : 330;
+
+      google.accounts.id.renderButton(
+        btnContainer,
+        { theme: 'outline', size: 'large', type: 'standard', shape: 'rectangular', text: 'continue_with', width: btnWidth, logo_alignment: 'center' }
+      );
+    }, 100);
+  }
+
+  // Parse JWT and login automatically
+  private handleGoogleCallback(response: any) {
+    try {
+      const base64Url = response.credential.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonPayload);
+      
+      // Auto register or login with Google details
+      const googleUser = {
+        firstName: payload.given_name,
+        lastName: payload.family_name,
+        email: payload.email,
+        password: 'google_oauth_placeholder_pass' // Used internally to fake password check
+      };
+      
+      // Register or Login
+      let authRes = this.authService.login(googleUser.email, googleUser.password);
+      if (!authRes.success && authRes.message === 'Invalid ID or password') {
+         authRes = this.authService.signup(googleUser);
+      }
+      
+      if (authRes.success) {
+         this.authSuccess.set('Google Sign-In successful!');
+         setTimeout(() => {
+           this.layout.showSignupModal.set(false);
+           this.authSuccess.set('');
+         }, 1000);
+      }
+    } catch(err) {
+      console.error('Google Auth parsing failed', err);
+      this.authError.set('Error integrating with Google.');
+    }
+  }
+
+  // Facebook SDK Setup & Login
+  handleFacebookLogin() {
+    const FB = (window as any).FB;
+    if (!FB) {
+      this.authError.set('Facebook SDK not loaded properly.');
+      return;
+    }
+
+    // Initialize if not already done
+    if (!(window as any).fbInitialized) {
+      FB.init({
+        appId      : 'YOUR_FACEBOOK_APP_ID', // MUST REPLACE WITH REAL APP ID
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v19.0'
+      });
+      (window as any).fbInitialized = true;
+    }
+
+    FB.login((response: any) => {
+      if (response.authResponse) {
+        FB.api('/me', {fields: 'first_name,last_name,email'}, (profile: any) => {
+          this.processFacebookLogin(profile);
+        });
+      } else {
+        this.authError.set('Facebook login cancelled or failed.');
+      }
+    }, {scope: 'public_profile,email'});
+  }
+
+  private processFacebookLogin(profile: any) {
+      if (!profile || (!profile.email && !profile.id)) {
+        this.authError.set('Failed to retrieve profile data from Facebook.');
+        return;
+      }
+
+      const fbUser = {
+        firstName: profile.first_name || '',
+        lastName: profile.last_name || '',
+        email: profile.email || `${profile.id}@facebook.com`,
+        phone: '', 
+        password: 'facebook_oauth_placeholder_pass'
+      };
+      
+      let authRes = this.authService.login(fbUser.email, fbUser.password);
+      if (!authRes.success && authRes.message === 'Invalid ID or password') {
+         authRes = this.authService.signup(fbUser);
+      }
+      
+      if (authRes.success) {
+         this.authSuccess.set('Facebook Sign-In successful!');
+         setTimeout(() => {
+           this.layout.showSignupModal.set(false);
+           this.authSuccess.set('');
+         }, 1000);
+      } else {
+        this.authError.set(authRes.message);
+      }
   }
 }

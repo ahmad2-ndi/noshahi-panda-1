@@ -2,6 +2,9 @@ import { Injectable, signal, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export interface User {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
   email: string;
 }
 
@@ -33,25 +36,30 @@ export class AuthService {
     }
   }
 
-  public signup(email: string, password: string): { success: boolean, message: string } {
-    if (!email || !password) {
-      return { success: false, message: 'Email and password are required' };
+  public signup(userData: { firstName?: string, lastName?: string, phone?: string, email: string, password: string }): { success: boolean, message: string } {
+    if (!userData.email || !userData.password) {
+      return { success: false, message: 'ID and password are required' };
     }
 
     if (this.isBrowser) {
       const usersStr = localStorage.getItem('users') || '[]';
       try {
         const users = JSON.parse(usersStr);
-        const exists = users.find((u: any) => u.email === email);
+        const exists = users.find((u: any) => u.email === userData.email || (userData.phone && u.phone === userData.phone));
         if (exists) {
-          return { success: false, message: 'User already exists' };
+          return { success: false, message: 'User already exists with this email or phone' };
         }
 
-        users.push({ email, password });
+        users.push(userData);
         localStorage.setItem('users', JSON.stringify(users));
 
         // Auto login after signup
-        this.setSession({ email });
+        this.setSession({ 
+          firstName: userData.firstName, 
+          lastName: userData.lastName, 
+          phone: userData.phone, 
+          email: userData.email 
+        });
         return { success: true, message: 'Sign up successful' };
       } catch (e) {
         return { success: false, message: 'An error occurred during sign up' };
@@ -60,21 +68,27 @@ export class AuthService {
     return { success: false, message: 'Environment issue' };
   }
 
-  public login(email: string, password: string): { success: boolean, message: string } {
-    if (!email || !password) {
-      return { success: false, message: 'Email and password are required' };
+  public login(id: string, password: string): { success: boolean, message: string } {
+    if (!id || !password) {
+      return { success: false, message: 'ID and password are required' };
     }
 
     if (this.isBrowser) {
       const usersStr = localStorage.getItem('users') || '[]';
       try {
         const users = JSON.parse(usersStr);
-        const user = users.find((u: any) => u.email === email && u.password === password);
+        // User handles can be email or phone
+        const user = users.find((u: any) => (u.email === id || u.phone === id) && u.password === password);
         if (user) {
-          this.setSession({ email });
+          this.setSession({ 
+            firstName: user.firstName, 
+            lastName: user.lastName, 
+            phone: user.phone, 
+            email: user.email 
+          });
           return { success: true, message: 'Log in successful' };
         } else {
-          return { success: false, message: 'Invalid email or password' };
+          return { success: false, message: 'Invalid ID or password' };
         }
       } catch (e) {
         return { success: false, message: 'An error occurred during log in' };

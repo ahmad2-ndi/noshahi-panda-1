@@ -11,11 +11,11 @@
       <div class="bg-yellow-100 p-3 rounded-full"
         style="box-shadow: inset 0 2px 8px rgba(0,0,0,0.05), 0 4px 6px rgba(251,206,7,0.2);"><i
           class="fas fa-tag text-custom-yellow-dark text-xl"></i></div>
-      <span id="banner-text-signup-btn" (click)="layout.openSignupModal()"
+      <span id="banner-text-signup-btn" (click)="layout.openSignupModal('signup')"
         class="trigger-signup-modal text-gray-800 font-semibold text-lg cursor-pointer hover:text-custom-yellow-dark transition-colors">✨
         Sign up for free delivery on your first order</span>
     </div>
-    <button id="banner-signup-btn" (click)="layout.openSignupModal()"
+    <button id="banner-signup-btn" (click)="layout.openSignupModal('signup')"
       class="trigger-signup-modal bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full shadow-md transition flex items-center gap-2"
       style="box-shadow: 0 12px 20px -8px #FBCE07;"><i class="fas fa-pen"></i> Sign up</button>
   </div>

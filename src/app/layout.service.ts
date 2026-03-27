@@ -18,6 +18,7 @@ export class LayoutService {
   public readonly citySearchQuery = signal('');
   public readonly activeTab = signal('delivery');
   public readonly showSignupModal = signal(false);
+  public readonly initialAuthMode = signal<'login' | 'signup'>('login');
   public readonly activeSort = signal('Relevance');
   public readonly quickFilters = signal<Map<string, boolean>>(new Map());
   public readonly selectedCuisine = signal<string | null>(null);
@@ -145,7 +146,8 @@ export class LayoutService {
     }
   }
 
-  public openSignupModal() {
+  public openSignupModal(mode: 'login' | 'signup' = 'login') {
+    this.initialAuthMode.set(mode);
     this.showSignupModal.set(true);
   }
 
