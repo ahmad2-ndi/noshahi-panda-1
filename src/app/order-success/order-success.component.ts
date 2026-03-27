@@ -37,7 +37,7 @@ import { FooterComponent } from '../shared/footer/footer.component';
           </div>
 
           <div class="space-y-4">
-            <button [routerLink]="['/']" (click)="trackOrder()" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-black py-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 active:translate-y-0 text-lg">
+            <button [routerLink]="['/track-order']" [queryParams]="{ id: trackingId }" class="w-full bg-custom-yellow hover:bg-yellow-500 text-gray-800 font-black py-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 active:translate-y-0 text-lg">
               Track My Order
             </button>
             <button [routerLink]="['/']" class="w-full bg-gray-50 hover:bg-gray-100 text-gray-500 font-bold py-4 rounded-2xl transition-all">
@@ -66,7 +66,6 @@ export class OrderSuccessComponent {
   }
 
   trackOrder() {
-    this.layout.activeTab.set('track-order');
-    this.router.navigate(['/']);
+    this.router.navigate(['/track-order'], { queryParams: { id: this.trackingId } });
   }
 }
