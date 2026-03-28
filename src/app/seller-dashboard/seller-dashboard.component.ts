@@ -137,12 +137,12 @@ import { FooterComponent } from '../shared/footer/footer.component';
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-100">
             <h3 class="text-lg sm:text-xl font-black text-gray-800 mb-4 sm:mb-6">Quick Actions</h3>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-              <button (click)="openModal('product')" class="flex flex-col items-center justify-center p-4 sm:p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#FBCE07] hover:bg-yellow-50 transition-all group">
+            <div class="grid grid-cols-2 gap-3 sm:gap-4 relative z-10">
+              <button (click)="openModal('product')" class="flex flex-col items-center justify-center p-4 sm:p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#FBCE07] hover:bg-yellow-50 transition-all group cursor-pointer">
                 <i class="fas fa-plus text-xl sm:text-2xl text-gray-300 group-hover:text-[#FBCE07] mb-2 sm:mb-3"></i>
                 <span class="text-xs sm:text-sm font-bold text-gray-600 group-hover:text-gray-800 text-center">Add Product</span>
               </button>
-              <button (click)="openModal('settings')" class="flex flex-col items-center justify-center p-4 sm:p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#FBCE07] hover:bg-yellow-50 transition-all group">
+              <button (click)="openModal('settings')" class="flex flex-col items-center justify-center p-4 sm:p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#FBCE07] hover:bg-yellow-50 transition-all group cursor-pointer">
                 <i class="fas fa-cog text-xl sm:text-2xl text-gray-300 group-hover:text-[#FBCE07] mb-2 sm:mb-3"></i>
                 <span class="text-xs sm:text-sm font-bold text-gray-600 group-hover:text-gray-800 text-center">Shop Settings</span>
               </button>
@@ -164,99 +164,103 @@ import { FooterComponent } from '../shared/footer/footer.component';
       </div>
 
       <!-- ADD PRODUCT MODAL -->
-      <div *ngIf="activeModal() === 'product'" class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
-        <div class="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 animate-slide-up">
-          <div class="bg-[#FBCE07] p-6 sm:p-8 flex justify-between items-center">
-             <div class="flex items-center gap-3">
-               <div class="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center text-gray-800">
-                 <i class="fas fa-plus-circle"></i>
+      @if (activeModal() === 'product') {
+        <div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
+          <div class="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 animate-slide-up">
+            <div class="bg-[#FBCE07] p-6 sm:p-8 flex justify-between items-center">
+               <div class="flex items-center gap-3">
+                 <div class="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center text-gray-800">
+                   <i class="fas fa-plus-circle"></i>
+                 </div>
+                 <h3 class="text-xl font-black text-gray-800">Add New Product</h3>
                </div>
-               <h3 class="text-xl font-black text-gray-800">Add New Product</h3>
-             </div>
-             <button (click)="closeModal()" class="w-10 h-10 bg-black/5 hover:bg-black/10 rounded-full transition-colors flex items-center justify-center text-gray-800">
-               <i class="fas fa-times"></i>
-             </button>
-          </div>
-          <div class="p-6 sm:p-8">
-             <form (submit)="handleAddProduct($event)" class="space-y-4">
-               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 <div>
-                   <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Product Title</label>
-                   <input type="text" name="title" [(ngModel)]="newProduct.title" placeholder="e.g. Special Beef Biryani" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300">
+               <button (click)="closeModal()" class="w-10 h-10 bg-black/5 hover:bg-black/10 rounded-full transition-colors flex items-center justify-center text-gray-800">
+                 <i class="fas fa-times"></i>
+               </button>
+            </div>
+            <div class="p-6 sm:p-8">
+               <form (submit)="handleAddProduct($event)" class="space-y-4">
+                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                   <div>
+                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Product Title</label>
+                     <input type="text" name="title" [(ngModel)]="newProduct.title" placeholder="e.g. Special Beef Biryani" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300">
+                   </div>
+                   <div>
+                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Price (Rs.)</label>
+                     <input type="number" name="price" [(ngModel)]="newProduct.price" placeholder="550" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300">
+                   </div>
                  </div>
                  <div>
-                   <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Price (Rs.)</label>
-                   <input type="number" name="price" [(ngModel)]="newProduct.price" placeholder="550" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Description</label>
+                    <textarea name="description" [(ngModel)]="newProduct.description" placeholder="Describe your delicious item..." class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300 h-24 resize-none"></textarea>
                  </div>
-               </div>
-               <div>
-                  <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Description</label>
-                  <textarea name="description" [(ngModel)]="newProduct.description" placeholder="Describe your delicious item..." class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3.5 focus:ring-2 focus:ring-[#FBCE07] font-bold text-gray-700 outline-none transition-all placeholder:text-gray-300 h-24 resize-none"></textarea>
-               </div>
-               <div>
-                  <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Product Images</label>
-                  <div class="grid grid-cols-3 gap-3">
-                    <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
-                      <i class="fas fa-camera text-gray-300 group-hover:text-[#FBCE07] text-xl mb-1"></i>
-                      <span class="text-[8px] font-black text-gray-400 uppercase">Main Image</span>
+                 <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 pl-2">Product Images</label>
+                    <div class="grid grid-cols-3 gap-3">
+                      <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
+                        <i class="fas fa-camera text-gray-300 group-hover:text-[#FBCE07] text-xl mb-1"></i>
+                        <span class="text-[8px] font-black text-gray-400 uppercase">Main Image</span>
+                      </div>
+                      <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
+                        <i class="fas fa-plus text-gray-200 text-sm"></i>
+                      </div>
+                      <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
+                        <i class="fas fa-plus text-gray-200 text-sm"></i>
+                      </div>
                     </div>
-                    <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
-                      <i class="fas fa-plus text-gray-200 text-sm"></i>
-                    </div>
-                    <div class="aspect-square bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center group cursor-pointer hover:border-[#FBCE07] transition-all">
-                      <i class="fas fa-plus text-gray-200 text-sm"></i>
-                    </div>
-                  </div>
-               </div>
-               <button type="submit" class="w-full py-4 bg-[#FBCE07] hover:bg-[#EAB308] text-gray-800 font-black rounded-2xl shadow-xl transition-all hover:-translate-y-1 border-b-4 border-[#EAB308] mt-4">Save Product</button>
-             </form>
+                 </div>
+                 <button type="submit" class="w-full py-4 bg-[#FBCE07] hover:bg-[#EAB308] text-gray-800 font-black rounded-2xl shadow-xl transition-all hover:-translate-y-1 border-b-4 border-[#EAB308] mt-4">Save Product</button>
+               </form>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- SHOP SETTINGS MODAL -->
-      <div *ngIf="activeModal() === 'settings'" class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 animate-slide-up">
-           <div class="bg-gray-800 p-6 sm:p-8 text-white flex justify-between items-center">
-             <div class="flex items-center gap-3">
-               <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                 <i class="fas fa-cog"></i>
+      @if (activeModal() === 'settings') {
+        <div class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
+          <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 animate-slide-up">
+             <div class="bg-gray-800 p-6 sm:p-8 text-white flex justify-between items-center">
+               <div class="flex items-center gap-3">
+                 <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                   <i class="fas fa-cog"></i>
+                 </div>
+                 <h3 class="text-xl font-black">Shop Settings</h3>
                </div>
-               <h3 class="text-xl font-black">Shop Settings</h3>
-             </div>
-             <button (click)="closeModal()" class="w-10 h-10 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center">
-               <i class="fas fa-times"></i>
-             </button>
-          </div>
-          <div class="p-6 sm:p-8 space-y-6">
-            <div class="flex items-center gap-4 p-4 bg-yellow-50 rounded-2xl border border-yellow-100">
-               <div class="w-12 h-12 bg-[#FBCE07] rounded-xl flex items-center justify-center text-gray-800">
-                 <i class="fas fa-door-open"></i>
-               </div>
-               <div class="flex-grow">
-                 <p class="text-xs font-black text-gray-800 mb-0.5">Shop Visibility</p>
-                 <p class="text-[10px] text-gray-500 font-bold">Currently visible to all customers</p>
-               </div>
-               <div class="w-12 h-6 bg-[#FBCE07] rounded-full relative cursor-pointer ring-4 ring-yellow-100">
-                 <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
-               </div>
+               <button (click)="closeModal()" class="w-10 h-10 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center">
+                 <i class="fas fa-times"></i>
+               </button>
             </div>
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-center gap-4 p-4 bg-yellow-50 rounded-2xl border border-yellow-100">
+                 <div class="w-12 h-12 bg-[#FBCE07] rounded-xl flex items-center justify-center text-gray-800">
+                   <i class="fas fa-door-open"></i>
+                 </div>
+                 <div class="flex-grow">
+                   <p class="text-xs font-black text-gray-800 mb-0.5">Shop Visibility</p>
+                   <p class="text-[10px] text-gray-500 font-bold">Currently visible to all customers</p>
+                 </div>
+                 <div class="w-12 h-6 bg-[#FBCE07] rounded-full relative cursor-pointer ring-4 ring-yellow-100">
+                   <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                 </div>
+              </div>
 
-            <div class="space-y-4">
-              <div>
-                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 pl-2">Shop Name</label>
-                <input type="text" value="Noshahi Family Kitchen" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3 font-bold text-gray-700 outline-none">
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 pl-2">Shop Name</label>
+                  <input type="text" value="Noshahi Family Kitchen" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3 font-bold text-gray-700 outline-none">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 pl-2">Contact Number</label>
+                  <input type="text" value="+92 339 0090543" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3 font-bold text-gray-700 outline-none">
+                </div>
               </div>
-              <div>
-                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 pl-2">Contact Number</label>
-                <input type="text" value="+92 339 0090543" class="w-full bg-gray-50 border-0 rounded-2xl px-5 py-3 font-bold text-gray-700 outline-none">
-              </div>
+
+              <button (click)="closeModal()" class="w-full py-4 bg-gray-800 hover:bg-gray-900 text-white font-black rounded-2xl transition-all">Update Settings</button>
             </div>
-
-            <button (click)="closeModal()" class="w-full py-4 bg-gray-800 hover:bg-gray-900 text-white font-black rounded-2xl transition-all">Update Settings</button>
           </div>
         </div>
-      </div>
+      }
     </div>
     
     <app-footer></app-footer>
@@ -287,17 +291,20 @@ export class SellerDashboardComponent {
   ]);
 
   openModal(type: string) {
+    console.log('Opening modal:', type);
     this.activeModal.set(type);
     document.body.style.overflow = 'hidden';
   }
 
   closeModal() {
+    console.log('Closing modal');
     this.activeModal.set(null);
     document.body.style.overflow = 'auto';
   }
 
   handleAddProduct(event: Event) {
     event.preventDefault();
+    console.log('Adding product:', this.newProduct);
     if (this.newProduct.title && this.newProduct.price) {
       // Logic for adding product
       this.activeMenuCount.update((c: number) => c + 1);
