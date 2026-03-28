@@ -53,9 +53,13 @@ export class AuthService {
       const usersStr = localStorage.getItem('users') || '[]';
       try {
         const users = JSON.parse(usersStr);
-        const exists = users.find((u: any) => u.email === userData.email || (userData.phone && u.phone === userData.phone));
+        // User can register with the same email/phone but for a different role
+        const exists = users.find((u: any) => 
+          (u.email === userData.email || (userData.phone && u.phone === userData.phone)) && 
+          u.role === userData.role
+        );
         if (exists) {
-          return { success: false, message: 'User already exists with this email or phone' };
+          return { success: false, message: 'User already exists as a ' + userData.role + ' with this email or phone' };
         }
 
         users.push(userData);
