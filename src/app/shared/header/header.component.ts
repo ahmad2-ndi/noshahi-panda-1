@@ -17,11 +17,11 @@ import { AuthService } from '../../auth.service';
         <!-- Header top row -->
         <header class="flex flex-wrap items-center justify-between gap-3 py-3" style="transform-style: preserve-3d;">
           <div class="flex items-center flex-wrap gap-3 sm:gap-6" style="transform-style: preserve-3d;">
-            <div class="flex flex-col leading-none tracking-tighter" [routerLink]="['/']" style="cursor: pointer;">
+            <div class="flex flex-col leading-none tracking-tighter" (click)="goToHome()" style="cursor: pointer;">
               <span class="text-3xl font-black text-gray-800">NOSHAHI</span>
               <span class="text-3xl font-black" style="color: #FBCE07;">PANDA</span>
             </div>
-            <div class="relative inline-block" style="transform-style: preserve-3d; z-index: 100;">
+            <div class="relative inline-block" style="transform-style: preserve-3d; z-index: 100;" *ngIf="authService.currentUser()?.role === 'buyer' || !authService.isLoggedIn()">
               <div id="locationPill" (click)="layout.toggleCityDropdown($event)"
                 class="flex items-center text-gray-700 text-sm sm:text-base border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 transition-all cursor-pointer">
                 <i class="fas fa-map-marker-alt text-custom-yellow mr-2"></i>
@@ -72,14 +72,18 @@ import { AuthService } from '../../auth.service';
             <ng-container *ngIf="authService.isLoggedIn()">
               <div class="hidden lg:flex items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100 shadow-sm">
                 <i class="fas fa-user-circle text-custom-yellow-dark text-lg"></i>
-                <span class="text-gray-800 font-bold truncate max-w-[120px] text-sm">{{ authService.currentUser()?.email }}</span>
+                <div class="flex flex-col">
+                  <span class="text-gray-800 font-bold truncate max-w-[120px] text-[10px] leading-tight">{{ authService.currentUser()?.email }}</span>
+                  <span class="text-custom-yellow-dark font-black uppercase text-[8px] leading-tight tracking-widest">{{ authService.currentUser()?.role }}</span>
+                </div>
               </div>
-              <button type="button" (click)="authService.logout()"
+              <button type="button" (click)="handleLogout()"
                 class="hidden lg:block text-gray-500 hover:text-red-500 font-medium cursor-pointer bg-transparent border-0 p-0 text-sm transition-colors">
                 <i class="fas fa-sign-out-alt"></i>
               </button>
             </ng-container>
             <button (click)="layout.showCart.set(true)" 
+              *ngIf="authService.currentUser()?.role === 'buyer' || !authService.isLoggedIn()"
               class="flex items-center text-gray-700 hover:text-custom-yellow-dark transition-all relative cart-icon-btn"
               [class.pulse-active]="pulseActive()">
               <i class="fas fa-shopping-cart text-xl"></i>
@@ -103,7 +107,7 @@ import { AuthService } from '../../auth.service';
         </header>
 
         <!-- TABS (Desktop Only) -->
-        <div class="hidden lg:flex flex-wrap gap-3 border-t border-gray-50 pt-3 pb-2" id="tabContainer">
+        <div class="hidden lg:flex flex-wrap gap-3 border-t border-gray-50 pt-3 pb-2" id="tabContainer" *ngIf="authService.currentUser()?.role === 'buyer' || !authService.isLoggedIn()">
           @for (tab of layout.tabs; track tab.id) {
           <button class="tab-btn py-2 px-5 font-bold text-sm uppercase tracking-wide transition-all border-2 rounded-full flex items-center gap-2" 
             [class.active-tab]="layout.activeTab() === tab.id"
@@ -129,7 +133,7 @@ import { AuthService } from '../../auth.service';
         class="absolute top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-2xl flex flex-col animate-slide-left">
         <!-- Drawer Header -->
         <div class="p-6 border-b flex items-center justify-between bg-white">
-          <div class="flex flex-col leading-none tracking-tighter">
+          <div class="flex flex-col leading-none tracking-tighter" (click)="goToHome(); isMobileMenuOpen.set(false);" style="cursor: pointer;">
             <span class="text-xl font-black text-gray-800">NOSHAHI</span>
             <span class="text-xl font-black text-custom-yellow">PANDA</span>
           </div>
@@ -144,12 +148,15 @@ import { AuthService } from '../../auth.service';
             <i class="fas fa-user"></i> Log in / Sign up
           </button>
           
-          <div *ngIf="authService.isLoggedIn()" class="w-full bg-white border border-gray-200 py-3 px-4 rounded-xl shadow-sm flex flex-col items-center justify-center gap-2">
+          <div *ngIf="authService.isLoggedIn()" class="w-full bg-white border border-gray-200 py-3 px-4 rounded-xl shadow-sm flex flex-col items-center justify-center gap-2 text-center">
             <div class="flex items-center gap-2 text-gray-800 font-bold">
               <i class="fas fa-user-circle text-custom-yellow text-xl"></i>
-              <span class="truncate max-w-[200px]">{{ authService.currentUser()?.email }}</span>
+              <div class="flex flex-col">
+                <span class="truncate max-w-[200px]">{{ authService.currentUser()?.email }}</span>
+                <span class="text-custom-yellow-dark font-black uppercase text-[10px] tracking-widest">{{ authService.currentUser()?.role }}</span>
+              </div>
             </div>
-            <button (click)="isMobileMenuOpen.set(false); authService.logout()" class="text-sm text-red-500 hover:text-red-600 font-bold mt-1 flex items-center gap-1 transition-colors">
+            <button (click)="isMobileMenuOpen.set(false); handleLogout()" class="text-sm text-red-500 hover:text-red-600 font-bold mt-1 flex items-center gap-1 transition-colors">
               <i class="fas fa-sign-out-alt"></i> Logout
             </button>
           </div>
@@ -160,7 +167,7 @@ import { AuthService } from '../../auth.service';
         </div>
 
         <!-- Navigation Links -->
-        <div class="flex-grow overflow-y-auto py-2">
+        <div class="flex-grow overflow-y-auto py-2" *ngIf="authService.currentUser()?.role === 'buyer' || !authService.isLoggedIn()">
           <h4 class="px-6 py-2 text-xs font-black text-gray-400 uppercase tracking-widest">Menu</h4>
           @for (tab of layout.tabs; track tab.id) {
             <button class="w-full text-left px-6 py-4 flex items-center gap-4 transition-colors relative"
@@ -192,7 +199,7 @@ import { AuthService } from '../../auth.service';
     </div>
 
     <!-- STICKY BOTTOM BANNER -->
-    <div *ngIf="showStickyBanner() && !authService.isLoggedIn()"
+    <div *ngIf="showStickyBanner() && !authService.isLoggedIn() && (authService.currentUser()?.role === 'buyer' || !authService.currentUser())"
       class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[99] p-4 animate-slide-up">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div class="flex items-center gap-4">
@@ -241,6 +248,25 @@ import { AuthService } from '../../auth.service';
 
         <div class="flex flex-col gap-4" style="transform: translateZ(20px);">
           
+          <!-- Role Selection (NEW) -->
+          <div class="space-y-2 mb-2">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">I want to login as</p>
+            <div class="flex gap-2">
+               <button *ngFor="let r of ['buyer', 'seller', 'rider']" 
+                       (click)="selectedRole.set($any(r))"
+                       class="flex-1 py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all border-2"
+                       [class.bg-[#FBCE07]]="selectedRole() === r"
+                       [class.border-[#FBCE07]]="selectedRole() === r"
+                       [class.text-gray-800]="selectedRole() === r"
+                       [class.bg-white]="selectedRole() !== r"
+                       [class.border-gray-100]="selectedRole() !== r"
+                       [class.text-gray-400]="selectedRole() !== r">
+                  <i class="fas" [class.fa-user]="r==='buyer'" [class.fa-store]="r==='seller'" [class.fa-motorcycle]="r==='rider'"></i>
+                  <span class="ml-1">{{r}}</span>
+               </button>
+            </div>
+          </div>
+
           <!-- Mode Toggle -->
           <div class="flex bg-gray-100 p-1 rounded-xl mb-2 relative">
              <div class="absolute inset-y-1 w-1/2 bg-white rounded-lg shadow-sm transition-transform duration-300"
@@ -480,6 +506,7 @@ export class HeaderComponent {
   public authError = signal('');
   public authSuccess = signal('');
   public authMode = signal<'login' | 'signup'>('login');
+  public selectedRole = signal<'buyer' | 'seller' | 'rider'>('buyer');
 
   constructor(public layout: LayoutService) {
     effect(() => {
@@ -523,7 +550,10 @@ export class HeaderComponent {
     } else if (tabId === 'track-order') {
       this.router.navigate(['/track-order']);
     } else {
-      this.router.navigate(['/']);
+      const user = this.authService.currentUser();
+      if (user?.role === 'seller') this.router.navigate(['/seller-dashboard']);
+      else if (user?.role === 'rider') this.router.navigate(['/rider-dashboard']);
+      else this.router.navigate(['/']);
     }
   }
 
@@ -541,7 +571,8 @@ export class HeaderComponent {
       lastName: this.authLastName,
       phone: this.authPhone,
       email: this.authEmail,
-      password: this.authPassword
+      password: this.authPassword,
+      role: this.selectedRole()
     };
 
     const res = this.authService.signup(userData);
@@ -550,6 +581,7 @@ export class HeaderComponent {
       setTimeout(() => {
         this.layout.showSignupModal.set(false);
         this.authSuccess.set('');
+        this.redirectByRole();
         this.resetAuthForm();
       }, 1000);
     } else {
@@ -560,17 +592,40 @@ export class HeaderComponent {
   handleLogin() {
     this.authError.set('');
     this.authSuccess.set('');
-    const res = this.authService.login(this.authEmail, this.authPassword);
+    const res = this.authService.login(this.authEmail, this.authPassword, this.selectedRole());
     if (res.success) {
       this.authSuccess.set(res.message);
       setTimeout(() => {
         this.layout.showSignupModal.set(false);
         this.authSuccess.set('');
+        this.redirectByRole();
         this.resetAuthForm();
       }, 1000);
     } else {
       this.authError.set(res.message);
     }
+  }
+
+  private redirectByRole() {
+    const user = this.authService.currentUser();
+    if (!user) return;
+    
+    if (user.role === 'seller') {
+      this.router.navigate(['/seller-dashboard']);
+    } else if (user.role === 'rider') {
+      this.router.navigate(['/rider-dashboard']);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
+  handleLogout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  goToHome() {
+    this.redirectByRole();
   }
 
   private resetAuthForm() {
@@ -624,12 +679,18 @@ export class HeaderComponent {
         firstName: payload.given_name,
         lastName: payload.family_name,
         email: payload.email,
-        password: 'google_oauth_placeholder_pass' // Used internally to fake password check
+        password: 'google_oauth_placeholder_pass', // Used internally to fake password check
+        role: this.selectedRole() // Use currently selected role
       };
       
       // Register or Login
-      let authRes = this.authService.login(googleUser.email, googleUser.password);
+      let authRes = this.authService.login(googleUser.email, googleUser.password, this.selectedRole());
       if (!authRes.success && authRes.message === 'Invalid ID or password') {
+         // If login fails because role mismatch, don't auto-signup
+         if (authRes.message.includes('Account found')) {
+            this.authError.set(authRes.message);
+            return;
+         }
          authRes = this.authService.signup(googleUser);
       }
       
@@ -638,6 +699,7 @@ export class HeaderComponent {
          setTimeout(() => {
            this.layout.showSignupModal.set(false);
            this.authSuccess.set('');
+           this.redirectByRole();
          }, 1000);
       }
     } catch(err) {
@@ -687,11 +749,17 @@ export class HeaderComponent {
         lastName: profile.last_name || '',
         email: profile.email || `${profile.id}@facebook.com`,
         phone: '', 
-        password: 'facebook_oauth_placeholder_pass'
+        password: 'facebook_oauth_placeholder_pass',
+        role: this.selectedRole()
       };
       
-      let authRes = this.authService.login(fbUser.email, fbUser.password);
+      let authRes = this.authService.login(fbUser.email, fbUser.password, this.selectedRole());
       if (!authRes.success && authRes.message === 'Invalid ID or password') {
+          // If login fails because role mismatch, don't auto-signup
+         if (authRes.message.includes('Account found')) {
+            this.authError.set(authRes.message);
+            return;
+         }
          authRes = this.authService.signup(fbUser);
       }
       
@@ -700,6 +768,7 @@ export class HeaderComponent {
          setTimeout(() => {
            this.layout.showSignupModal.set(false);
            this.authSuccess.set('');
+           this.redirectByRole();
          }, 1000);
       } else {
         this.authError.set(authRes.message);

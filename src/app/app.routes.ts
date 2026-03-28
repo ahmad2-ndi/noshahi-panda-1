@@ -9,6 +9,8 @@ import { CaterersComponent } from './caterers/caterers.component';
 
 import { OrderSuccessComponent } from './order-success/order-success.component';
 import { OrderTrackingComponent } from './order-tracking/order-tracking.component';
+import { SellerDashboardComponent } from './seller-dashboard/seller-dashboard.component';
+import { RiderDashboardComponent } from './rider-dashboard/rider-dashboard.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -20,5 +22,7 @@ export const routes: Routes = [
     { path: 'caterers', component: CaterersComponent },
     { path: 'order-success', component: OrderSuccessComponent },
     { path: 'track-order', component: OrderTrackingComponent },
+    { path: 'seller-dashboard', component: SellerDashboardComponent },
+    { path: 'rider-dashboard', component: RiderDashboardComponent },
     { path: '**', redirectTo: '' }
 ];

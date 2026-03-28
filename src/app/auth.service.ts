@@ -6,6 +6,7 @@ export interface User {
   lastName?: string;
   phone?: string;
   email: string;
+  role: 'buyer' | 'seller' | 'rider';
 }
 
 @Injectable({
@@ -27,7 +28,7 @@ export class AuthService {
       if (storedUser) {
         try {
           const userObj = JSON.parse(storedUser);
-          this.currentUser.set({ email: userObj.email });
+          this.currentUser.set(userObj);
           this.isLoggedIn.set(true);
         } catch (e) {
           console.error('Error parsing stored user data', e);
@@ -36,9 +37,16 @@ export class AuthService {
     }
   }
 
-  public signup(userData: { firstName?: string, lastName?: string, phone?: string, email: string, password: string }): { success: boolean, message: string } {
-    if (!userData.email || !userData.password) {
-      return { success: false, message: 'ID and password are required' };
+  public signup(userData: { 
+    firstName?: string, 
+    lastName?: string, 
+    phone?: string, 
+    email: string, 
+    password: string,
+    role: 'buyer' | 'seller' | 'rider'
+  }): { success: boolean, message: string } {
+    if (!userData.email || !userData.password || !userData.role) {
+      return { success: false, message: 'All required fields including role must be provided' };
     }
 
     if (this.isBrowser) {
@@ -58,7 +66,8 @@ export class AuthService {
           firstName: userData.firstName, 
           lastName: userData.lastName, 
           phone: userData.phone, 
-          email: userData.email 
+          email: userData.email,
+          role: userData.role
         });
         return { success: true, message: 'Sign up successful' };
       } catch (e) {
@@ -68,7 +77,7 @@ export class AuthService {
     return { success: false, message: 'Environment issue' };
   }
 
-  public login(id: string, password: string): { success: boolean, message: string } {
+  public login(id: string, password: string, role?: 'buyer' | 'seller' | 'rider'): { success: boolean, message: string } {
     if (!id || !password) {
       return { success: false, message: 'ID and password are required' };
     }
@@ -78,17 +87,27 @@ export class AuthService {
       try {
         const users = JSON.parse(usersStr);
         // User handles can be email or phone
-        const user = users.find((u: any) => (u.email === id || u.phone === id) && u.password === password);
+        const user = users.find((u: any) => 
+          (u.email === id || u.phone === id) && 
+          u.password === password &&
+          (!role || u.role === role)
+        );
+
         if (user) {
+          if (role && user.role !== role) {
+            return { success: false, message: `Account found, but it is not registered as a ${role}` };
+          }
+
           this.setSession({ 
             firstName: user.firstName, 
             lastName: user.lastName, 
             phone: user.phone, 
-            email: user.email 
+            email: user.email,
+            role: user.role
           });
           return { success: true, message: 'Log in successful' };
         } else {
-          return { success: false, message: 'Invalid ID or password' };
+          return { success: false, message: 'Invalid credentials or role' };
         }
       } catch (e) {
         return { success: false, message: 'An error occurred during log in' };
